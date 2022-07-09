@@ -13,3 +13,34 @@
   --location: #ef5757;
   --shedule: #e1ae4a;
 }
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+}
+
+.app {
+  overflow: hidden;
+  color: var(--black);
+  background-color: #f3f3f3;
+  padding: 1rem 1rem;
+}
+
+.blur {
+  position: absolute;
+  width: 22rem;
+  height: 14rem;
+  border-radius: 50%;
+  background-color: #afddf0;
+  filter: blur(72px);
+}
+
+.blur-1 {
+  top: -18%;
+  right: 0;
+}
+
+.blur-2 {
+  top: 36%;
+  left: -8rem;
+}
