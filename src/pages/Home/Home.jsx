@@ -1,3 +1,4 @@
+import PostSide from '../../components/PostSide/PostSide';
 import ProfileSide from '../../components/ProfileSide/ProfileSide';
 import './Home.css';
 
@@ -7,7 +8,9 @@ const Home = () => {
       <div className='profileSide'>
         <ProfileSide />
       </div>
-      <div className='postSide'>Post</div>
+      <div className='postSide'>
+        <PostSide />
+      </div>
       <div className='rightSide'>Right</div>
     </div>
   );
