@@ -16,7 +16,7 @@ const Post = ({ data }) => {
         <img src={Share} alt='react-icon' />
       </div>
 
-      <span>{data.likes} likes</span>
+      <span className='post-likes'>{data.likes} likes</span>
 
       <div className='detail'>
         <span>
