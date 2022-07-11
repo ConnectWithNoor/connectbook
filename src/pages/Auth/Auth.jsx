@@ -78,7 +78,7 @@ const Login = () => {
   return (
     <div className='a-right'>
       <form className='infoForm authForm'>
-        <h3>Sign up</h3>
+        <h3>Sign in</h3>
 
         <div>
           <input
