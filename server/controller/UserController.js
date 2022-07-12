@@ -41,3 +41,22 @@ export const updateUserById = async (req, res, next) => {
     next(error);
   }
 };
+
+// delete user by Id
+
+export const deleteUserById = async (req, res, next) => {
+  try {
+    const { id: userIdToChange } = req.params;
+    const { currentUserId, currentAdminStatus } = req.body;
+
+    if (userIdToChange === currentUserId || currentAdminStatus) {
+      const user = await UserModel.findById(userIdToChange);
+      await user.remove();
+      return res.status(200).json({ message: 'User Deleted Successfully' });
+    } else {
+      throw new Error('You are not allowed to perfrom this action');
+    }
+  } catch (error) {
+    next(error);
+  }
+};
