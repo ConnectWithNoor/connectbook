@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import PostModel from '../model/PostModel.js';
+import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 // create new Post
@@ -77,7 +78,42 @@ export const deletePostById = async (req, res, next) => {
       .json({ status: true, message: 'Post deleted successfully' });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: deletePostById, line: 79`,
+      `Error: File: PostController, func: deletePostById, line: 80`,
+      error
+    );
+    next(new ErrorResponse(error.message, 500));
+  }
+};
+
+// like/dislike a post by Id
+export const likeOrDislikePostById = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const { userId } = req.body;
+  try {
+    const post = await PostModel.findById(postId);
+    const user = await UserModel.findById(userId);
+
+    if (!post || !user)
+      return next(new ErrorResponse('Not allowed to perform this action', 401));
+
+    if (!post.likes.includes(userId)) {
+      //   if post isn't liked by the user. Like it
+      post.likes = post.likes.concat(userId);
+      await post.save();
+      return res
+        .status(200)
+        .json({ status: true, message: 'Post liked successfully' });
+    } else {
+      //   if post is already liked by the user. Unlike it
+      post.likes = post.likes.filter((id) => id === userId);
+      await post.save();
+      return res
+        .status(200)
+        .json({ status: true, message: 'Post unliked successfully' });
+    }
+  } catch (error) {
+    console.error(
+      `Error: File: PostController, func: deletePostById, line: 103`,
       error
     );
     next(new ErrorResponse(error.message, 500));
