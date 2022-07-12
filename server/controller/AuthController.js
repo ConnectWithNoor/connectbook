@@ -3,10 +3,14 @@ import UserModel from '../model/UserModel.js';
 export const registerUser = async (req, res, next) => {
   try {
     const { username, password, firstName, lastName } = req.body;
-    const newUser = new UserModel({ username, password, firstName, lastName });
+    const user = new UserModel({ username, password, firstName, lastName });
 
-    await newUser.save();
-    return res.status(200).json(newUser);
+    await user.save();
+    const token = await user.generateAuthToken();
+    return res.status(200).json({
+      token,
+      user,
+    });
   } catch (error) {
     console.error(`Error: File: AuthController, line: 11`, error);
     return next(error);
@@ -20,9 +24,11 @@ export const loginUser = async (req, res, next) => {
       req.body.password
     );
 
-    // add Jwt Token
+    const token = await user.generateAuthToken();
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
 
-    return res.status(200).json({ user });
+    return res.status(200).json({ user, token });
   } catch (error) {
     console.error(`Error: File: AuthController, line: 25`, error);
     return next(error);
