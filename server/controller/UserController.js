@@ -23,9 +23,8 @@ export const getUserById = async (req, res, next) => {
 export const updateUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
-    const { currentUserId, currentAdminStatus } = req.body;
 
-    if (userIdToChange === currentUserId || currentAdminStatus) {
+    if (userIdToChange === req.user._id.toString() || req.user.isAdmn) {
       const updates = Object.keys(req.body);
       const user = await UserModel.findById(userIdToChange);
 
@@ -52,9 +51,8 @@ export const updateUserById = async (req, res, next) => {
 export const deleteUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
-    const { currentUserId, currentAdminStatus } = req.body;
 
-    if (userIdToChange === currentUserId || currentAdminStatus) {
+    if (userIdToChange === req.user._id.toString() || req.user.isAdmn) {
       const user = await UserModel.findById(userIdToChange);
       await user.remove();
       return res
@@ -77,8 +75,8 @@ export const deleteUserById = async (req, res, next) => {
 // follow a user
 export const followUser = async (req, res, next) => {
   const { id: idToFollow } = req.params;
-  const { currentUserId } = req.body;
-
+  const { currentUserId } = req.user._id.toString()
+  
   try {
     if (idToFollow === currentUserId) {
       return next(new ErrorResponse('You cannot follow yourself.', 401));
@@ -111,7 +109,7 @@ export const followUser = async (req, res, next) => {
 // unfollow a user
 export const unFollowUser = async (req, res, next) => {
   const { id: idToFollow } = req.params;
-  const { currentUserId } = req.body;
+  const { currentUserId } = req.user._id.toString()
 
   try {
     if (idToFollow === currentUserId) {

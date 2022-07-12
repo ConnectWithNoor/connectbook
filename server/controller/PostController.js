@@ -42,7 +42,7 @@ export const getPostById = async (req, res, next) => {
 export const updatePostById = async (req, res, next) => {
   const { id: postId } = req.params;
   const updates = Object.keys(req.body);
-  const { userId } = req.body;
+  const userId = req.user._id.toString()
 
   try {
     const post = await PostModel.findOne({ _id: postId, userId });
@@ -64,7 +64,7 @@ export const updatePostById = async (req, res, next) => {
 // delete a post by id
 export const deletePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const { userId } = req.body;
+  const userId = req.user._id.toString()
 
   try {
     const post = await PostModel.findOne({ _id: postId, userId });
@@ -88,7 +88,8 @@ export const deletePostById = async (req, res, next) => {
 // like/dislike a post by Id
 export const likeOrDislikePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const { userId } = req.body;
+  const userId = req.user._id.toString()
+
   try {
     const post = await PostModel.findById(postId);
     const user = await UserModel.findById(userId);
@@ -122,7 +123,7 @@ export const likeOrDislikePostById = async (req, res, next) => {
 
 // get timelime posts
 export const getTimelinePosts = async (req, res, next) => {
-  const { userId } = req.body;
+  const userId = req.user._id.toString()
 
   try {
     const postIdsSet = new Set([]);

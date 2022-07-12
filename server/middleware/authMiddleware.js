@@ -1,13 +1,14 @@
 import jwt from 'jsonwebtoken';
 
-import UserModel from '../model/UserModel';
-import ErrorResponse from '../utils/ErrorResponse';
+import UserModel from '../model/UserModel.js';
+import ErrorResponse from '../utils/ErrorResponse.js';
+
 
 export const authMiddleware = async (req, res, next) => {
   try {
     if (
-      !req.headers.authorization &&
-      !req.headers.authorization.startsWith('Bearer')
+      !req.headers?.authorization &&
+      !req.headers?.authorization?.startsWith('Bearer')
     ) {
       return next(new ErrorResponse('Please use a valid auth token', 401));
     }
@@ -17,13 +18,13 @@ export const authMiddleware = async (req, res, next) => {
 
     const user = await UserModel.findOne({
       _id: decodedToken._id,
-      'accessToken.token': token,
+      'accessToken.token': accessToken,
     });
 
     if (!user)
       return next(new ErrorResponse('Please use a valid auth token', 401));
 
-    req.token = token;
+    req.accessToken = accessToken;
     req.user = user;
     next();
   } catch (error) {

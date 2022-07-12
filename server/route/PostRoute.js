@@ -7,13 +7,15 @@ import {
   likeOrDislikePostById,
   getTimelinePosts,
 } from '../controller/PostController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 const router = express.Router();
 
+
 router.post('/create', createPost);
-router.get('/timeline', getTimelinePosts);
+router.get('/timeline', authMiddleware, getTimelinePosts);
 router.get('/:id', getPostById);
-router.put('/:id', updatePostById);
-router.put('/:id/like', likeOrDislikePostById);
-router.delete('/:id', deletePostById);
+router.put('/:id', authMiddleware, updatePostById);
+router.put('/:id/like', authMiddleware,likeOrDislikePostById);
+router.delete('/:id', authMiddleware,deletePostById);
 
 export default router;
