@@ -1,7 +1,6 @@
 import UserModel from '../model/UserModel.js';
 
 // get a user by id;
-
 export const getUserById = async (req, res, next) => {
   try {
     const { id: userId } = req.params;
@@ -18,7 +17,6 @@ export const getUserById = async (req, res, next) => {
 };
 
 // update a user by Id
-
 export const updateUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
@@ -43,7 +41,6 @@ export const updateUserById = async (req, res, next) => {
 };
 
 // delete user by Id
-
 export const deleteUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
@@ -87,6 +84,41 @@ export const followUser = async (req, res, next) => {
     return res.status(200).json('User is followed');
   } catch (error) {
     console.error(`Error: File: UserController, line: 73`, error);
+
+    next(error);
+  }
+};
+
+// unfollow a user
+export const unFollowUser = async (req, res, next) => {
+  const { id: idToFollow } = req.params;
+  const { currentUserId } = req.body;
+
+  try {
+    if (idToFollow === currentUserId) {
+      throw new Error('You cannot unfollow yourself.');
+    }
+
+    const toUnfollowUser = await UserModel.findById(idToFollow);
+    const followingUser = await UserModel.findById(currentUserId);
+
+    // if the user is already not following that user
+    if (!toUnfollowUser.followers.includes(currentUserId))
+      throw new Error('You are already not following the user');
+
+    toUnfollowUser.followers = toUnfollowUser.followers.filter(
+      (id) => id === currentUserId
+    );
+    followingUser.following = followingUser.following.filter(
+      (id) => id === idToFollow
+    );
+
+    await toUnfollowUser.save();
+    await followingUser.save();
+
+    return res.status(200).json('User is unfollowed');
+  } catch (error) {
+    console.error(`Error: File: UserController, line: 121`, error);
 
     next(error);
   }
