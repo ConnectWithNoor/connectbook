@@ -4,6 +4,7 @@ import dotenv from 'dotenv';
 
 import AuthRoute from './route/AuthRoute.js';
 import UserRoute from './route/UserRoute.js';
+import PostRoute from './route/PostRoute.js';
 import { ErrorHandler } from './middleware/errorHandler.js';
 
 // variables and config
@@ -29,6 +30,7 @@ app.use(
 // Routes
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);
+app.use('/api/post', PostRoute);
 
 app.use(ErrorHandler);
 
