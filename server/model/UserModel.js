@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import ErrorResponse from '../utils/ErrorResponse.js';
 
 const UserSchema = new mongoose.Schema(
   {

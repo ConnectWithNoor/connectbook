@@ -1,4 +1,5 @@
 import UserModel from '../model/UserModel.js';
+import ErrorResponse from '../utils/ErrorResponse.js';
 
 // get a user by id;
 export const getUserById = async (req, res, next) => {
@@ -6,13 +7,15 @@ export const getUserById = async (req, res, next) => {
     const { id: userId } = req.params;
     const user = await UserModel.findById(userId);
 
-    if (!user) throw new Error('No user found');
+    if (!user) throw next(new ErrorResponse('No user found', 404));
 
     return res.status(200).json(user);
   } catch (error) {
-    console.error(`Error: File: UserController, line: 14`, error);
-
-    next(error);
+    console.error(
+      `Error: File: UserController, func: getUserById,  line: 15`,
+      error
+    );
+    next(new ErrorResponse('Something went wrong', 500));
   }
 };
 
@@ -32,11 +35,16 @@ export const updateUserById = async (req, res, next) => {
 
       return res.status(200).json(user);
     } else {
-      throw new Error('You are not allowed to perfrom this action');
+      return next(
+        new ErrorResponse('You are not allowed to perfrom this action', 401)
+      );
     }
   } catch (error) {
-    console.error(`Error: File: UserController, line: 40`, error);
-    next(error);
+    console.error(
+      `Error: File: UserController, func: updateUserById, line: 44`,
+      error
+    );
+    next(new ErrorResponse('Something went wrong', 500));
   }
 };
 
@@ -49,12 +57,20 @@ export const deleteUserById = async (req, res, next) => {
     if (userIdToChange === currentUserId || currentAdminStatus) {
       const user = await UserModel.findById(userIdToChange);
       await user.remove();
-      return res.status(200).json({ message: 'User Deleted Successfully' });
+      return res
+        .status(200)
+        .json({ status: true, message: 'User Deleted Successfully' });
     } else {
-      throw new Error('You are not allowed to perfrom this action');
+      next(
+        new ErrorResponse('You are not allowed to perfrom this action', 401)
+      );
     }
   } catch (error) {
-    next(error);
+    console.error(
+      `Error: File: UserController, func: deleteUserById, line: 70`,
+      error
+    );
+    next(new ErrorResponse('Something went wrong', 500));
   }
 };
 
@@ -65,7 +81,7 @@ export const followUser = async (req, res, next) => {
 
   try {
     if (idToFollow === currentUserId) {
-      throw new Error('You cannot follow yourself.');
+      return next(new ErrorResponse('You cannot follow yourself.', 401));
     }
 
     const TofollowUser = await UserModel.findById(idToFollow);
@@ -73,7 +89,7 @@ export const followUser = async (req, res, next) => {
 
     // if the user is already following that user
     if (TofollowUser.followers.includes(currentUserId))
-      throw new Error('You are already following the user');
+      return next(new ErrorResponse('You are already following the user', 400));
 
     TofollowUser.followers = TofollowUser.followers.concat(currentUserId);
     followingUser.following = followingUser.following.concat(idToFollow);
@@ -81,11 +97,14 @@ export const followUser = async (req, res, next) => {
     await TofollowUser.save();
     await followingUser.save();
 
-    return res.status(200).json('User is followed');
+    return res.status(200).json({ status: true, message: 'User is followed' });
   } catch (error) {
-    console.error(`Error: File: UserController, line: 73`, error);
+    console.error(
+      `Error: File: UserController, func: followUser, line: 103`,
+      error
+    );
 
-    next(error);
+    next(new ErrorResponse('Something went wrong', 500));
   }
 };
 
@@ -96,7 +115,7 @@ export const unFollowUser = async (req, res, next) => {
 
   try {
     if (idToFollow === currentUserId) {
-      throw new Error('You cannot unfollow yourself.');
+      return next(new ErrorResponse('You cannot unfollow yourself.', 401));
     }
 
     const toUnfollowUser = await UserModel.findById(idToFollow);
@@ -104,7 +123,9 @@ export const unFollowUser = async (req, res, next) => {
 
     // if the user is already not following that user
     if (!toUnfollowUser.followers.includes(currentUserId))
-      throw new Error('You are already not following the user');
+      return next(
+        new ErrorResponse('You are already not following the user', 400)
+      );
 
     toUnfollowUser.followers = toUnfollowUser.followers.filter(
       (id) => id === currentUserId
@@ -116,10 +137,15 @@ export const unFollowUser = async (req, res, next) => {
     await toUnfollowUser.save();
     await followingUser.save();
 
-    return res.status(200).json('User is unfollowed');
+    return res
+      .status(200)
+      .json({ status: true, message: 'User is unfollowed' });
   } catch (error) {
-    console.error(`Error: File: UserController, line: 121`, error);
+    console.error(
+      `Error: File: UserController, func: followUser, line: 145`,
+      error
+    );
 
-    next(error);
+    next(new ErrorResponse('Something went wrong', 500));
   }
 };

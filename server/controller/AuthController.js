@@ -1,4 +1,5 @@
 import UserModel from '../model/UserModel.js';
+import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -12,8 +13,11 @@ export const registerUser = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    console.error(`Error: File: AuthController, line: 15`, error);
-    return next(error);
+    console.error(
+      `Error: File: AuthController, func: registerUser, line: 17`,
+      error
+    );
+    return next(new ErrorResponse(error.message, 500));
   }
 };
 
@@ -28,9 +32,12 @@ export const loginUser = async (req, res, next) => {
     user.tokens = user.tokens.concat({ token });
     await user.save();
 
-    return res.status(200).json({ user, token });
+    return res.status(200).json({ token, user });
   } catch (error) {
-    console.error(`Error: File: AuthController, line: 33`, error);
-    return next(error);
+    console.error(
+      `Error: File: AuthController, func: loginUser, line: 38`,
+      error
+    );
+    return next(new ErrorResponse(error.message, 500));
   }
 };
