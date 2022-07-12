@@ -17,3 +17,5 @@ export const createPost = async (req, res, next) => {
     next(new ErrorResponse(error.message, 500));
   }
 };
+
+// Delete a post

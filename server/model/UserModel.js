@@ -68,12 +68,14 @@ const UserSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         default: [],
+        ref: 'user',
       },
     ],
     following: [
       {
         type: mongoose.Schema.Types.ObjectId,
         default: [],
+        ref: 'user',
       },
     ],
     tokens: [

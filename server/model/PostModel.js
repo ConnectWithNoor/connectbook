@@ -5,6 +5,7 @@ const postSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
+      ref: 'user',
     },
     description: {
       type: String,
@@ -13,6 +14,7 @@ const postSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         default: [],
+        ref: 'user',
       },
     ],
     image: {
