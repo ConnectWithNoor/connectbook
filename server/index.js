@@ -3,10 +3,12 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
 import AuthRoute from './route/AuthRoute.js'
+import {ErrorHandler} from './middleware/errorHandler.js'
 
 // variables and config
 dotenv.config();
 const app = express();
+const port = process.env.PORT || 3000;
 
 // middleware;
 app.use(
@@ -26,6 +28,8 @@ app.use(
 // Routes
 app.use('/api/auth', AuthRoute)
 
+app.use(ErrorHandler)
+
 // DB connection and server listening
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -33,8 +37,8 @@ mongoose
   })
   .then(() => {
     console.log(`Database Connected to ${process.env.DB_NAME}`);
-    app.listen(process.env.PORT, () =>
-      console.log(`Server running at port ${process.env.PORT}`)
+    app.listen(port, () =>
+      console.log(`Server running at port ${port}`)
     );
   })
   .catch((err) => console.log('Something went wrong', err));
