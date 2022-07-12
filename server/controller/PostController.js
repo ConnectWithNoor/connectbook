@@ -53,7 +53,31 @@ export const updatePostById = async (req, res, next) => {
     return res.status(200).json({ status: true, message: 'Post is updated' });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: updatePostById, line: 46`,
+      `Error: File: PostController, func: updatePostById, line: 56`,
+      error
+    );
+    next(new ErrorResponse(error.message, 500));
+  }
+};
+
+// delete a post by id
+export const deletePostById = async (req, res, next) => {
+  const { id: postId } = req.params;
+  const { userId } = req.body;
+
+  try {
+    const post = await PostModel.findOne({ _id: postId, userId });
+    if (!post)
+      return next(new ErrorResponse('No post founds. Invalid post id', 404));
+
+    await post.remove();
+
+    return res
+      .status(200)
+      .json({ status: true, message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error(
+      `Error: File: PostController, func: deletePostById, line: 79`,
       error
     );
     next(new ErrorResponse(error.message, 500));
