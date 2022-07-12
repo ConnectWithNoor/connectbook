@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 import UserModel from '../model/UserModel';
+import ErrorResponse from '../utils/ErrorResponse';
 
 export const authMiddleware = async (req, res, next) => {
   try {
@@ -8,24 +9,28 @@ export const authMiddleware = async (req, res, next) => {
       !req.headers.authorization &&
       !req.headers.authorization.startsWith('Bearer')
     ) {
-      throw new Error('Please use a valid auth token');
+      return next(new ErrorResponse('Please use a valid auth token', 401));
     }
 
-    const token = req.header('Authorization').replace('Bearer ', '');
-    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    const accessToken = req.header('Authorization').replace('Bearer ', '');
+    const decodedToken = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
 
     const user = await UserModel.findOne({
       _id: decodedToken._id,
-      'tokens.token': token,
+      'accessToken.token': token,
     });
 
-    if (!user) throw new Error('Bad auth token');
+    if (!user)
+      return next(new ErrorResponse('Please use a valid auth token', 401));
+
     req.token = token;
     req.user = user;
     next();
   } catch (error) {
-    console.error(`Error: File: authMiddleware, line xx`, error);
+    console.error(`Error: File: authMiddleware, line 30`, error);
 
-    next(error);
+    return next(
+      new ErrorResponse(error.message || 'You are not authorized', 401)
+    );
   }
 };

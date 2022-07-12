@@ -7,7 +7,6 @@ import {
   likeOrDislikePostById,
   getTimelinePosts,
 } from '../controller/PostController.js';
-
 const router = express.Router();
 
 router.post('/create', createPost);

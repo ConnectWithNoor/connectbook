@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import validator from 'validator';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import ErrorResponse from '../utils/ErrorResponse.js';
+import PostModel from './PostModel.js';
 
 const UserSchema = new mongoose.Schema(
   {
@@ -78,7 +78,15 @@ const UserSchema = new mongoose.Schema(
         ref: 'user',
       },
     ],
-    tokens: [
+    accessTokens: [
+      {
+        token: {
+          type: String,
+          required: true,
+        },
+      },
+    ],
+    refreshTokens: [
       {
         token: {
           type: String,
@@ -99,7 +107,8 @@ UserSchema.methods.toJSON = function () {
   const userObj = user.toObject();
 
   delete userObj.password;
-  delete userObj.tokens;
+  delete userObj.accessTokens;
+  delete userObj.refreshTokens;
 
   return userObj;
 };
@@ -113,6 +122,12 @@ UserSchema.pre('save', async function (next) {
   next();
 });
 
+UserSchema.pre('remove', async function (next) {
+  const user = this;
+  await PostModel.deleteMany({ userId: user._id });
+  next();
+});
+
 UserSchema.statics.findByCredentials = async (username, password) => {
   const user = await userModel.findOne({ username });
   if (!user) throw new Error('Invalid Credentials');
@@ -123,14 +138,23 @@ UserSchema.statics.findByCredentials = async (username, password) => {
   return user;
 };
 
-UserSchema.methods.generateAuthToken = async function () {
+UserSchema.methods.generateAccessToken = async function () {
   const user = this;
   const token = await jwt.sign(
     { _id: user._id.toString() },
-    process.env.JWT_SECRET,
+    process.env.JWT_ACCESS_SECRET,
     {
       expiresIn: process.env.JWT_EXPIRE,
     }
+  );
+  return token;
+};
+
+UserSchema.methods.generateRefreshToken = async function () {
+  const user = this;
+  const token = await jwt.sign(
+    { _id: user._id.toString() },
+    process.env.JWT_REFRESH_SECRET
   );
   return token;
 };

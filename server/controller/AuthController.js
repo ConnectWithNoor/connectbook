@@ -5,11 +5,16 @@ export const registerUser = async (req, res, next) => {
   try {
     const { username, password, firstName, lastName } = req.body;
     const user = new UserModel({ username, password, firstName, lastName });
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.accessTokens = user.accessTokens.concat({ token: accessToken });
+    user.refreshTokens = user.refreshTokens.concat({ token: refreshToken });
 
     await user.save();
-    const token = await user.generateAuthToken();
+
     return res.status(200).json({
-      token,
+      accessToken,
       user,
     });
   } catch (error) {
@@ -28,11 +33,14 @@ export const loginUser = async (req, res, next) => {
       req.body.password
     );
 
-    const token = await user.generateAuthToken();
-    user.tokens = user.tokens.concat({ token });
+    const accessToken = await user.generateAccessToken();
+    const refreshToken = await user.generateRefreshToken();
+
+    user.accessTokens = user.accessTokens.concat({ token: accessToken });
+    user.refreshTokens = user.refreshTokens.concat({ token: refreshToken });
     await user.save();
 
-    return res.status(200).json({ token, user });
+    return res.status(200).json({ accessToken, user });
   } catch (error) {
     console.error(
       `Error: File: AuthController, func: loginUser, line: 38`,
