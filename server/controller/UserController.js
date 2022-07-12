@@ -15,7 +15,7 @@ export const getUserById = async (req, res, next) => {
       `Error: File: UserController, func: getUserById,  line: 15`,
       error
     );
-    next(new ErrorResponse('Something went wrong', 500));
+    next(new ErrorResponse(error.message, 500));
   }
 };
 
@@ -44,7 +44,7 @@ export const updateUserById = async (req, res, next) => {
       `Error: File: UserController, func: updateUserById, line: 44`,
       error
     );
-    next(new ErrorResponse('Something went wrong', 500));
+    next(new ErrorResponse(error.message, 500));
   }
 };
 
@@ -70,7 +70,7 @@ export const deleteUserById = async (req, res, next) => {
       `Error: File: UserController, func: deleteUserById, line: 70`,
       error
     );
-    next(new ErrorResponse('Something went wrong', 500));
+    next(new ErrorResponse(error.message, 500));
   }
 };
 
@@ -104,7 +104,7 @@ export const followUser = async (req, res, next) => {
       error
     );
 
-    next(new ErrorResponse('Something went wrong', 500));
+    next(new ErrorResponse(error.message, 500));
   }
 };
 
@@ -146,6 +146,6 @@ export const unFollowUser = async (req, res, next) => {
       error
     );
 
-    next(new ErrorResponse('Something went wrong', 500));
+    next(new ErrorResponse(error.message, 500));
   }
 };

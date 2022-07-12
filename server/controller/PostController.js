@@ -18,4 +18,21 @@ export const createPost = async (req, res, next) => {
   }
 };
 
-// Delete a post
+// Get a post by id
+export const getPostById = async (req, res, next) => {
+  const { id: postId } = req.params;
+  try {
+    const post = await PostModel.findById(postId);
+
+    if (!post)
+      return next(new ErrorResponse('No post founds. Invalid post id', 404));
+
+    return res.status(200).json(post);
+  } catch (error) {
+    console.error(
+      `Error: File: PostController, func: getPost, line: 27`,
+      error
+    );
+    next(new ErrorResponse(error.message, 500));
+  }
+};
