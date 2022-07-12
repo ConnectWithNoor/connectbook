@@ -113,7 +113,61 @@ export const likeOrDislikePostById = async (req, res, next) => {
     }
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: deletePostById, line: 103`,
+      `Error: File: PostController, func: deletePostById, line: 116`,
+      error
+    );
+    next(new ErrorResponse(error.message, 500));
+  }
+};
+
+// get timelime posts
+export const getTimelinePosts = async (req, res, next) => {
+  const { userId } = req.body;
+
+  try {
+    const postIdsSet = new Set([]);
+    const user = await UserModel.findById(userId);
+    postIdsSet.add(user.id);
+
+    user.following.forEach((id) => postIdsSet.add(id.toString()));
+    const postIdsArray = Array.from(postIdsSet);
+
+    const allPosts = await PostModel.find({ userId: postIdsArray })
+      .populate('userId', 'username firstName lastName _id')
+      .sort({ createdAt: -1 });
+
+    return res.status(200).json(allPosts);
+
+    // by using aggregation pipeline
+
+    // const currentUserPosts = await PostModel.find({ userId });
+    // const postsByFollowings = await UserModel.aggregate([
+    //   {
+    //     $match: {
+    //       _id: new mongoose.Types.ObjectId(userId),
+    //     },
+    //   },
+    //   {
+    //     $lookup: {
+    //       from: 'posts',
+    //       localField: 'following',
+    //       foreignField: 'userId',
+    //       as: 'postsByFollowings',
+    //     },
+    //   },
+    //   {
+    //     $project: {
+    //       postsByFollowings: 1,
+    //       _id: 0,
+    //     },
+    //   },
+    // ]);
+    // return res
+    //   .status(200)
+    //   .json([...currentUserPosts, ...postsByFollowings[0].postsByFollowings]);
+  } catch (error) {
+    console.error(
+      `Error: File: PostController, func: getTimelinePosts, line: 170`,
       error
     );
     next(new ErrorResponse(error.message, 500));
