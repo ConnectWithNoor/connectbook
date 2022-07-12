@@ -12,7 +12,7 @@ export const registerUser = async (req, res, next) => {
       user,
     });
   } catch (error) {
-    console.error(`Error: File: AuthController, line: 11`, error);
+    console.error(`Error: File: AuthController, line: 15`, error);
     return next(error);
   }
 };
@@ -30,7 +30,7 @@ export const loginUser = async (req, res, next) => {
 
     return res.status(200).json({ user, token });
   } catch (error) {
-    console.error(`Error: File: AuthController, line: 25`, error);
+    console.error(`Error: File: AuthController, line: 33`, error);
     return next(error);
   }
 };

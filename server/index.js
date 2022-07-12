@@ -2,8 +2,9 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 
-import AuthRoute from './route/AuthRoute.js'
-import {ErrorHandler} from './middleware/errorHandler.js'
+import AuthRoute from './route/AuthRoute.js';
+import UserRoute from './route/UserRoute.js';
+import { ErrorHandler } from './middleware/errorHandler.js';
 
 // variables and config
 dotenv.config();
@@ -26,9 +27,10 @@ app.use(
 );
 
 // Routes
-app.use('/api/auth', AuthRoute)
+app.use('/api/auth', AuthRoute);
+app.use('/api/user', UserRoute);
 
-app.use(ErrorHandler)
+app.use(ErrorHandler);
 
 // DB connection and server listening
 mongoose
@@ -37,8 +39,6 @@ mongoose
   })
   .then(() => {
     console.log(`Database Connected to ${process.env.DB_NAME}`);
-    app.listen(port, () =>
-      console.log(`Server running at port ${port}`)
-    );
+    app.listen(port, () => console.log(`Server running at port ${port}`));
   })
   .catch((err) => console.log('Something went wrong', err));
