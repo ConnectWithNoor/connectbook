@@ -63,14 +63,18 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: 'relationshipStatus',
     },
-    followers: {
-      type: Array,
-      default: [],
-    },
-    following: {
-      type: Array,
-      default: [],
-    },
+    followers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        default: [],
+      },
+    ],
+    following: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        default: [],
+      },
+    ],
     tokens: [
       {
         token: {
@@ -98,15 +102,6 @@ UserSchema.methods.toJSON = function () {
 };
 
 UserSchema.pre('save', async function (next) {
-  const user = this;
-  if (user.isModified('password')) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-  }
-  next();
-});
-
-UserSchema.pre('findOneAndUpdate', async function (next) {
   const user = this;
   if (user.isModified('password')) {
     const salt = await bcrypt.genSalt(10);

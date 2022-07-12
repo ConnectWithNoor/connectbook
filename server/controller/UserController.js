@@ -37,7 +37,7 @@ export const updateUserById = async (req, res, next) => {
       throw new Error('You are not allowed to perfrom this action');
     }
   } catch (error) {
-    console.error(`Error: File: UserController, line: 25`, error);
+    console.error(`Error: File: UserController, line: 40`, error);
     next(error);
   }
 };
@@ -57,6 +57,37 @@ export const deleteUserById = async (req, res, next) => {
       throw new Error('You are not allowed to perfrom this action');
     }
   } catch (error) {
+    next(error);
+  }
+};
+
+// follow a user
+export const followUser = async (req, res, next) => {
+  const { id: idToFollow } = req.params;
+  const { currentUserId } = req.body;
+
+  try {
+    if (idToFollow === currentUserId) {
+      throw new Error('You cannot follow yourself.');
+    }
+
+    const TofollowUser = await UserModel.findById(idToFollow);
+    const followingUser = await UserModel.findById(currentUserId);
+
+    // if the user is already following that user
+    if (TofollowUser.followers.includes(currentUserId))
+      throw new Error('You are already following the user');
+
+    TofollowUser.followers = TofollowUser.followers.concat(currentUserId);
+    followingUser.following = followingUser.following.concat(idToFollow);
+
+    await TofollowUser.save();
+    await followingUser.save();
+
+    return res.status(200).json('User is followed');
+  } catch (error) {
+    console.error(`Error: File: UserController, line: 73`, error);
+
     next(error);
   }
 };
