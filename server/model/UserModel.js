@@ -144,7 +144,7 @@ UserSchema.methods.generateAccessToken = async function () {
     { _id: user._id.toString() },
     process.env.JWT_ACCESS_SECRET,
     {
-      expiresIn: process.env.JWT_EXPIRE,
+      expiresIn: process.env.JWT_ACCESS_EXPIRE,
     }
   );
   return token;
@@ -154,7 +154,9 @@ UserSchema.methods.generateRefreshToken = async function () {
   const user = this;
   const token = await jwt.sign(
     { _id: user._id.toString() },
-    process.env.JWT_REFRESH_SECRET
+    process.env.JWT_REFRESH_SECRET, {
+      expiresIn: process.env.JWT_REFRESH_EXPIRE
+    }
   );
   return token;
 };
