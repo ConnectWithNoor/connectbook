@@ -5,7 +5,10 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 
 // create new Post
 export const createPost = async (req, res, next) => {
-  const newPost = new PostModel(req.body);
+  const userId = req.user._id.toString();
+  const {description} = req.body;
+  
+  const newPost = new PostModel({userId, description});
 
   try {
     await newPost.save();
@@ -47,7 +50,7 @@ export const updatePostById = async (req, res, next) => {
   try {
     const post = await PostModel.findOne({ _id: postId, userId });
     if (!post)
-      return next(new ErrorResponse('No post founds. Invalid post id', 404));
+      return next(new ErrorResponse('No post found. Invalid post id', 404));
 
     updates.forEach((update) => (post[update] = req.body[update]));
     await post.save();

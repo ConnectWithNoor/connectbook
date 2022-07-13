@@ -49,7 +49,7 @@ const UserSchema = new mongoose.Schema(
     },
     about: {
       type: String,
-      minlength: 10,
+      minlength: [10, 'Please write more about yourself'],
       default: 'I am an interesting person',
     },
     livesIn: {
@@ -78,20 +78,16 @@ const UserSchema = new mongoose.Schema(
         ref: 'user',
       },
     ],
-    accessTokens: [
+    tokens: [
       {
-        token: {
+        accessToken: {
           type: String,
           required: true,
         },
-      },
-    ],
-    refreshTokens: [
-      {
-        token: {
+        refreshToken: {
           type: String,
           required: true,
-        },
+        }
       },
     ],
   },
@@ -107,8 +103,7 @@ UserSchema.methods.toJSON = function () {
   const userObj = user.toObject();
 
   delete userObj.password;
-  delete userObj.accessTokens;
-  delete userObj.refreshTokens;
+  delete userObj.tokens;
 
   return userObj;
 };

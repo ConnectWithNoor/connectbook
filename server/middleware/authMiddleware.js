@@ -18,13 +18,16 @@ export const authMiddleware = async (req, res, next) => {
 
     const user = await UserModel.findOne({
       _id: decodedToken._id,
-      'accessToken.token': accessToken,
+      'tokens.accessToken': accessToken,
     });
 
+    
     if (!user)
-      return next(new ErrorResponse('Please use a valid auth token', 401));
-
-    req.accessToken = accessToken;
+    return next(new ErrorResponse('Please use a valid auth token', 401));
+    
+    const token = user.tokens.find(token => token.accessToken === accessToken);
+    
+    req.token = token;
     req.user = user;
     next();
   } catch (error) {
