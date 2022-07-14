@@ -6,9 +6,9 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 // create new Post
 export const createPost = async (req, res, next) => {
   const userId = req.user._id.toString();
-  const {description} = req.body;
-  
-  const newPost = new PostModel({userId, description});
+  const { description } = req.body;
+
+  const newPost = new PostModel({ userId, description });
 
   try {
     await newPost.save();
@@ -45,7 +45,7 @@ export const getPostById = async (req, res, next) => {
 export const updatePostById = async (req, res, next) => {
   const { id: postId } = req.params;
   const updates = Object.keys(req.body);
-  const userId = req.user._id.toString()
+  const userId = req.user._id.toString();
 
   try {
     const post = await PostModel.findOne({ _id: postId, userId });
@@ -67,7 +67,7 @@ export const updatePostById = async (req, res, next) => {
 // delete a post by id
 export const deletePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const userId = req.user._id.toString()
+  const userId = req.user._id.toString();
 
   try {
     const post = await PostModel.findOne({ _id: postId, userId });
@@ -91,14 +91,13 @@ export const deletePostById = async (req, res, next) => {
 // like/dislike a post by Id
 export const likeOrDislikePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const userId = req.user._id.toString()
+  const userId = req.user._id.toString();
 
   try {
     const post = await PostModel.findById(postId);
-    const user = await UserModel.findById(userId);
 
-    if (!post || !user)
-      return next(new ErrorResponse('Not allowed to perform this action', 401));
+    if (!post)
+      return next(new ErrorResponse('Not post found. Invalid post id', 401));
 
     if (!post.likes.includes(userId)) {
       //   if post isn't liked by the user. Like it
@@ -126,17 +125,15 @@ export const likeOrDislikePostById = async (req, res, next) => {
 
 // get timelime posts
 export const getTimelinePosts = async (req, res, next) => {
-  const userId = req.user._id.toString()
-
+  const user = req.user;
   try {
-    const postIdsSet = new Set([]);
-    const user = await UserModel.findById(userId);
-    postIdsSet.add(user.id);
+    const userIdsSet = new Set([]);
+    userIdsSet.add(user.id);
 
-    user.following.forEach((id) => postIdsSet.add(id.toString()));
-    const postIdsArray = Array.from(postIdsSet);
+    user.following.forEach((id) => userIdsSet.add(id.toString()));
+    const userIdsArray = Array.from(userIdsSet);
 
-    const allPosts = await PostModel.find({ userId: postIdsArray })
+    const allPosts = await PostModel.find({ userId: userIdsArray })
       .populate('userId', 'username firstName lastName _id')
       .sort({ createdAt: -1 });
 

@@ -1,6 +1,44 @@
+import { useState, memo } from 'react';
 import './Auth.css';
 
+const initialState = {
+  firstName: '',
+  lastName: '',
+  username: '',
+  password: '',
+  confirmPass: '',
+};
+
 const Auth = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [data, setData] = useState(initialState);
+  const [error, setError] = useState(null);
+
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const resetForm = () => {
+    setData(initialState);
+    setError(null);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setError(null);
+
+    if (isLogin) {
+    } else {
+      if (data.password !== data.confirmPass) {
+        setError('Passwords must match');
+        return;
+      }
+    }
+  };
+
   return (
     <div className='auth'>
       <div className='a-left'>
@@ -11,100 +49,140 @@ const Auth = () => {
         </div>
       </div>
 
-      <Login />
+      {isLogin ? (
+        <Login
+          setIsLogin={setIsLogin}
+          handleChange={handleChange}
+          resetForm={resetForm}
+          error={error}
+          handleSubmit={handleSubmit}
+        />
+      ) : (
+        <Signup
+          setIsLogin={setIsLogin}
+          handleChange={handleChange}
+          resetForm={resetForm}
+          error={error}
+          handleSubmit={handleSubmit}
+        />
+      )}
     </div>
   );
 };
 
-const Signup = () => {
-  return (
-    <div className='a-right'>
-      <form className='infoForm authForm'>
-        <h3>Sign up</h3>
+const Signup = memo(
+  ({ setIsLogin, handleChange, resetForm, error, handleSubmit }) => {
+    return (
+      <div className='a-right'>
+        <form className='infoForm authForm' onSubmit={handleSubmit}>
+          <h3>Sign up</h3>
 
-        <div>
-          <input
-            type='text'
-            placeholder='First Name'
-            className='infoInput'
-            name='firstName'
-          />
-          <input
-            type='text'
-            placeholder='Last Name'
-            className='infoInput'
-            name='LastName'
-          />
-        </div>
+          <div>
+            <input
+              type='text'
+              placeholder='First Name'
+              className='infoInput'
+              name='firstName'
+              onChange={handleChange}
+            />
+            <input
+              type='text'
+              placeholder='Last Name'
+              className='infoInput'
+              name='lastName'
+              onChange={handleChange}
+            />
+          </div>
 
-        <div>
-          <input
-            type='text'
-            placeholder='Username'
-            className='infoInput'
-            name='username'
-          />
-        </div>
+          <div>
+            <input
+              type='text'
+              placeholder='Username'
+              className='infoInput'
+              name='username'
+              onChange={handleChange}
+            />
+          </div>
 
-        <div>
-          <input
-            type='password'
-            placeholder='Password'
-            className='infoInput'
-            name='password'
-          />
-          <input
-            type='password'
-            placeholder='Confirm Password'
-            className='infoInput'
-            name='confirmPass'
-          />
-        </div>
+          <div>
+            <input
+              type='password'
+              placeholder='Password'
+              className='infoInput'
+              name='password'
+              onChange={handleChange}
+            />
+            <input
+              type='password'
+              placeholder='Confirm Password'
+              className='infoInput'
+              name='confirmPass'
+              onChange={handleChange}
+            />
+          </div>
+          <span className='error-msg'>{error}</span>
+          <div>
+            <span
+              className='auth-acc-already'
+              onClick={() => {
+                resetForm();
+                setIsLogin((prev) => !prev);
+              }}
+            >
+              Already have an account. Login!
+            </span>
+          </div>
+          <button className='button infoButton' type='submit'>
+            Sign up
+          </button>
+        </form>
+      </div>
+    );
+  }
+);
 
-        <div>
-          <span className='auth-acc-already'>
-            Already have an account. LOGIN!
-          </span>
-        </div>
-        <button className='button infoButton' type='submit'>
-          signup
-        </button>
-      </form>
-    </div>
-  );
-};
+const Login = memo(
+  ({ setIsLogin, handleChange, resetForm, error, handleSubmit }) => {
+    return (
+      <div className='a-right'>
+        <form className='infoForm authForm' onSubmit={handleSubmit}>
+          <h3>Sign in</h3>
 
-const Login = () => {
-  return (
-    <div className='a-right'>
-      <form className='infoForm authForm'>
-        <h3>Sign in</h3>
-
-        <div>
-          <input
-            type='text'
-            placeholder='Username'
-            className='infoInput'
-            name='username'
-          />
-        </div>
-        <div>
-          <input
-            type='password'
-            placeholder='Password'
-            className='infoInput'
-            name='password'
-          />
-        </div>
-        <div>
-          <span style={{ fontSize: '12px' }}>
-            Don't have an account Sign up
-          </span>
+          <div>
+            <input
+              type='text'
+              placeholder='Username'
+              className='infoInput'
+              name='username'
+              onChange={handleChange}
+            />
+          </div>
+          <div>
+            <input
+              type='password'
+              placeholder='Password'
+              className='infoInput'
+              name='password'
+              onChange={handleChange}
+            />
+          </div>
+          <span className='error-msg'>{error}</span>
+          <div>
+            <span
+              className='auth-acc-already'
+              onClick={() => {
+                resetForm();
+                setIsLogin((prev) => !prev);
+              }}
+            >
+              Don't have an account Sign up
+            </span>
+          </div>
           <button className='button infoButton'>Login</button>
-        </div>
-      </form>
-    </div>
-  );
-};
+        </form>
+      </div>
+    );
+  }
+);
 
 export default Auth;

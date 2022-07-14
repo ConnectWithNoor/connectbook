@@ -1,4 +1,4 @@
-import { TrendData } from '../../../Data/TrendsData';
+import { TrendData } from '../../../data/TrendsData';
 
 import './TrendCard.css';
 

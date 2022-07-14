@@ -1,4 +1,4 @@
-import { Followers } from '../../Data/FollowersData';
+import { Followers } from '../../data/FollowersData';
 
 import './FollowersCard.css';
 

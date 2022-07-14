@@ -78,4 +78,12 @@
 
 .auth-acc-already {
   font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.error-msg {
+  color: red;
+  font-size: 0.8rem;
+  align-self: flex-end;
+  margin-right: 5px;
 }

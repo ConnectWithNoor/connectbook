@@ -3,7 +3,6 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
-
 export const authMiddleware = async (req, res, next) => {
   try {
     if (
@@ -21,13 +20,14 @@ export const authMiddleware = async (req, res, next) => {
       'tokens.accessToken': accessToken,
     });
 
-    
     if (!user)
-    return next(new ErrorResponse('Please use a valid auth token', 401));
-    
-    const token = user.tokens.find(token => token.accessToken === accessToken);
-    
-    req.token = token;
+      return next(new ErrorResponse('Please use a valid auth token', 401));
+
+    const token = user.tokens.find(
+      (token) => token.accessToken === accessToken
+    );
+
+    req.tokens = token;
     req.user = user;
     next();
   } catch (error) {

@@ -1,5 +1,5 @@
 import Post from '../Post/Post';
-import { PostsData } from '../../Data/PostsData';
+import { PostsData } from '../../data/PostsData';
 import './PostsFeed.css';
 
 const PostsFeed = () => {
