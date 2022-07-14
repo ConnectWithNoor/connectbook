@@ -1,4 +1,5 @@
 import jwt from 'jsonwebtoken';
+import { ErrorHandler } from '../middleware/errorHandler.js';
 
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
@@ -28,7 +29,8 @@ export const registerUser = async (req, res, next) => {
       `Error: File: AuthController, func: registerUser, line: 17`,
       error
     );
-    return next(new ErrorResponse(error.message, 500));
+    console.log(error);
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -52,7 +54,7 @@ export const loginUser = async (req, res, next) => {
       `Error: File: AuthController, func: loginUser, line: 38`,
       error
     );
-    return next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -71,7 +73,7 @@ export const logout = async (req, res, next) => {
       .json({ status: true, message: 'User logged out successfully' });
   } catch (error) {
     console.error(`Error: File: AuthController, func: logout, line: 70`, error);
-    return next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -118,6 +120,6 @@ export const refreshAccessToken = async (req, res, next) => {
       error
     );
 
-    return next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };

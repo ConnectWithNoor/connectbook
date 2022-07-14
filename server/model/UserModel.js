@@ -87,7 +87,7 @@ const UserSchema = new mongoose.Schema(
         refreshToken: {
           type: String,
           required: true,
-        }
+        },
       },
     ],
   },
@@ -149,8 +149,9 @@ UserSchema.methods.generateRefreshToken = async function () {
   const user = this;
   const token = await jwt.sign(
     { _id: user._id.toString() },
-    process.env.JWT_REFRESH_SECRET, {
-      expiresIn: process.env.JWT_REFRESH_EXPIRE
+    process.env.JWT_REFRESH_SECRET,
+    {
+      expiresIn: process.env.JWT_REFRESH_EXPIRE,
     }
   );
   return token;

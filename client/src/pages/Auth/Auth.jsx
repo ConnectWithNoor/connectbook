@@ -17,6 +17,7 @@ const initialState = {
 };
 
 const Auth = () => {
+  const controller = new AbortController();
   const [isLogin, setIsLogin] = useState(true);
   const { error, loadingAuth } = useSelector((state) => state.authReducer);
   const [data, setData] = useState(initialState);
@@ -27,6 +28,11 @@ const Auth = () => {
     setErrorMsg(error);
   }, [error]);
 
+  useEffect(() => {
+    return controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleChange = (e) => {
     setData({
       ...data,
@@ -35,6 +41,7 @@ const Auth = () => {
   };
 
   const resetForm = () => {
+    controller.abort();
     setData(initialState);
     setErrorMsg(null);
   };
@@ -44,14 +51,14 @@ const Auth = () => {
     setErrorMsg(null);
 
     if (isLogin) {
-      dispatch(loginUserAction(data));
+      dispatch(loginUserAction(data, controller));
     } else {
       if (data.password !== data.confirmPass) {
         setErrorMsg('Passwords must match');
         return;
       }
 
-      dispatch(registerUserAction(data));
+      dispatch(registerUserAction(data, controller));
     }
   };
 

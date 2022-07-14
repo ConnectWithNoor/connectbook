@@ -31,10 +31,11 @@ export const authMiddleware = async (req, res, next) => {
     req.user = user;
     next();
   } catch (error) {
-    console.error(`Error: File: authMiddleware, line 30`, error);
+    console.error(`Error: File: authMiddleware, line 34`, error);
 
-    return next(
-      new ErrorResponse(error.message || 'You are not authorized', 401)
-    );
+    // return next(
+    //   new ErrorResponse(error.message || 'You are not authorized', 401)
+    // );
+    return next(ErrorHandler(error, req, res, next));
   }
 };

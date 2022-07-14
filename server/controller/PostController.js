@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import { ErrorHandler } from '../middleware/errorHandler.js';
 import PostModel from '../model/PostModel.js';
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
@@ -15,10 +16,10 @@ export const createPost = async (req, res, next) => {
     res.status(200).json(newPost);
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: createPost, line: 14`,
+      `Error: File: PostController, func: createPost, line: 18`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -34,10 +35,10 @@ export const getPostById = async (req, res, next) => {
     return res.status(200).json(post);
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: getPostById, line: 33`,
+      `Error: File: PostController, func: getPostById, line: 38`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -57,10 +58,10 @@ export const updatePostById = async (req, res, next) => {
     return res.status(200).json({ status: true, message: 'Post is updated' });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: updatePostById, line: 56`,
+      `Error: File: PostController, func: updatePostById, line: 61`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -81,10 +82,10 @@ export const deletePostById = async (req, res, next) => {
       .json({ status: true, message: 'Post deleted successfully' });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: deletePostById, line: 80`,
+      `Error: File: PostController, func: deletePostById, line: 85`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -116,10 +117,10 @@ export const likeOrDislikePostById = async (req, res, next) => {
     }
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: deletePostById, line: 116`,
+      `Error: File: PostController, func: likeOrDislikePostById, line: 120`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -168,9 +169,9 @@ export const getTimelinePosts = async (req, res, next) => {
     //   .json([...currentUserPosts, ...postsByFollowings[0].postsByFollowings]);
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: getTimelinePosts, line: 170`,
+      `Error: File: PostController, func: getTimelinePosts, line: 172`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };

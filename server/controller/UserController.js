@@ -1,3 +1,4 @@
+import { ErrorHandler } from '../middleware/errorHandler.js';
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
@@ -12,10 +13,10 @@ export const getUserById = async (req, res, next) => {
     return res.status(200).json(user);
   } catch (error) {
     console.error(
-      `Error: File: UserController, func: getUserById,  line: 15`,
+      `Error: File: UserController, func: getUserById,  line: 16`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -43,7 +44,7 @@ export const updateUserById = async (req, res, next) => {
       `Error: File: UserController, func: updateUserById, line: 44`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -68,7 +69,7 @@ export const deleteUserById = async (req, res, next) => {
       `Error: File: UserController, func: deleteUserById, line: 70`,
       error
     );
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -102,7 +103,7 @@ export const followUser = async (req, res, next) => {
       error
     );
 
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
 
@@ -144,6 +145,6 @@ export const unFollowUser = async (req, res, next) => {
       error
     );
 
-    next(new ErrorResponse(error.message, 500));
+    return next(ErrorHandler(error, req, res, next));
   }
 };
