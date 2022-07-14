@@ -3,7 +3,7 @@ import {
   applyMiddleware,
   compose,
 } from 'redux';
-import thunk from 'react-redux';
+import thunk from 'redux-thunk';
 import reducers from './reducers';
 
 const saveToLocalStorage = (store) => {
@@ -14,7 +14,7 @@ const saveToLocalStorage = (store) => {
 const loadFromLocalStorage = () => {
   const serializedStore = JSON.parse(localStorage.getItem('store'));
 
-  if (!serializedStore) return null;
+  if (!serializedStore) return undefined;
 
   return serializedStore;
 };

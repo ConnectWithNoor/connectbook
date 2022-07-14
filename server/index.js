@@ -1,6 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
 import AuthRoute from './route/AuthRoute.js';
 import UserRoute from './route/UserRoute.js';
@@ -24,6 +25,12 @@ app.use(
   express.urlencoded({
     limit: '30mb',
     extended: true,
+  })
+);
+
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
   })
 );
 
