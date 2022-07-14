@@ -1,4 +1,9 @@
 import { useState, memo } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  loginUserAction,
+  registerUserAction,
+} from '../../state/Auth/AuthActions';
 import './Auth.css';
 
 const initialState = {
@@ -13,6 +18,8 @@ const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [data, setData] = useState(initialState);
   const [error, setError] = useState(null);
+
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     setData({
@@ -31,11 +38,14 @@ const Auth = () => {
     setError(null);
 
     if (isLogin) {
+      dispatch(loginUserAction(data));
     } else {
       if (data.password !== data.confirmPass) {
         setError('Passwords must match');
         return;
       }
+
+      dispatch(registerUserAction(data));
     }
   };
 
