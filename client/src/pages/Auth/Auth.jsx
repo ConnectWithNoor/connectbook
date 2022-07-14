@@ -1,5 +1,7 @@
-import { useState, memo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useState, memo, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { UilSpinnerAlt } from '@iconscout/react-unicons';
+
 import {
   loginUserAction,
   registerUserAction,
@@ -16,10 +18,14 @@ const initialState = {
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
+  const { error, loadingAuth } = useSelector((state) => state.authReducer);
   const [data, setData] = useState(initialState);
-  const [error, setError] = useState(null);
-
+  const [errorMsg, setErrorMsg] = useState(null);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setErrorMsg(error);
+  }, [error]);
 
   const handleChange = (e) => {
     setData({
@@ -30,18 +36,18 @@ const Auth = () => {
 
   const resetForm = () => {
     setData(initialState);
-    setError(null);
+    setErrorMsg(null);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setError(null);
+    setErrorMsg(null);
 
     if (isLogin) {
       dispatch(loginUserAction(data));
     } else {
       if (data.password !== data.confirmPass) {
-        setError('Passwords must match');
+        setErrorMsg('Passwords must match');
         return;
       }
 
@@ -64,16 +70,18 @@ const Auth = () => {
           setIsLogin={setIsLogin}
           handleChange={handleChange}
           resetForm={resetForm}
-          error={error}
+          error={errorMsg}
           handleSubmit={handleSubmit}
+          loading={loadingAuth}
         />
       ) : (
         <Signup
           setIsLogin={setIsLogin}
           handleChange={handleChange}
           resetForm={resetForm}
-          error={error}
+          error={errorMsg}
           handleSubmit={handleSubmit}
+          loading={loadingAuth}
         />
       )}
     </div>
@@ -81,7 +89,7 @@ const Auth = () => {
 };
 
 const Signup = memo(
-  ({ setIsLogin, handleChange, resetForm, error, handleSubmit }) => {
+  ({ setIsLogin, handleChange, resetForm, error, handleSubmit, loading }) => {
     return (
       <div className='a-right'>
         <form className='infoForm authForm' onSubmit={handleSubmit}>
@@ -94,6 +102,7 @@ const Signup = memo(
               className='infoInput'
               name='firstName'
               onChange={handleChange}
+              required
             />
             <input
               type='text'
@@ -101,6 +110,7 @@ const Signup = memo(
               className='infoInput'
               name='lastName'
               onChange={handleChange}
+              required
             />
           </div>
 
@@ -111,6 +121,7 @@ const Signup = memo(
               className='infoInput'
               name='username'
               onChange={handleChange}
+              required
             />
           </div>
 
@@ -120,6 +131,7 @@ const Signup = memo(
               placeholder='Password'
               className='infoInput'
               name='password'
+              required
               onChange={handleChange}
             />
             <input
@@ -127,6 +139,7 @@ const Signup = memo(
               placeholder='Confirm Password'
               className='infoInput'
               name='confirmPass'
+              required
               onChange={handleChange}
             />
           </div>
@@ -142,8 +155,12 @@ const Signup = memo(
               Already have an account. Login!
             </span>
           </div>
-          <button className='button infoButton' type='submit'>
-            Sign up
+          <button
+            className='button infoButton'
+            type='submit'
+            disabled={loading}
+          >
+            {loading ? <UilSpinnerAlt className='loadingButton' /> : 'Register'}
           </button>
         </form>
       </div>
@@ -152,7 +169,7 @@ const Signup = memo(
 );
 
 const Login = memo(
-  ({ setIsLogin, handleChange, resetForm, error, handleSubmit }) => {
+  ({ setIsLogin, handleChange, resetForm, error, handleSubmit, loading }) => {
     return (
       <div className='a-right'>
         <form className='infoForm authForm' onSubmit={handleSubmit}>
@@ -165,6 +182,7 @@ const Login = memo(
               className='infoInput'
               name='username'
               onChange={handleChange}
+              required
             />
           </div>
           <div>
@@ -174,6 +192,7 @@ const Login = memo(
               className='infoInput'
               name='password'
               onChange={handleChange}
+              required
             />
           </div>
           <span className='error-msg'>{error}</span>
@@ -185,10 +204,12 @@ const Login = memo(
                 setIsLogin((prev) => !prev);
               }}
             >
-              Don't have an account Sign up
+              Don't have an account. Register Now!
             </span>
           </div>
-          <button className='button infoButton'>Login</button>
+          <button className='button infoButton' disabled={loading}>
+            {loading ? <UilSpinnerAlt className='loadingButton' /> : 'Log in'}
+          </button>
         </form>
       </div>
     );

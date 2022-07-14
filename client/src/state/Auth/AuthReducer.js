@@ -2,7 +2,7 @@ import { AUTH_FAILED, AUTH_START, AUTH_SUCCESS } from './AuthActionTypes';
 
 const initialState = {
   authData: null,
-  loading: false,
+  loadingAuth: false,
   error: null,
 };
 
@@ -11,7 +11,7 @@ const authReducer = (state = initialState, action) => {
     case AUTH_START:
       return {
         ...state,
-        loading: true,
+        loadingAuth: true,
         error: null,
       };
 
@@ -20,15 +20,15 @@ const authReducer = (state = initialState, action) => {
       return {
         ...state,
         authData: action.data,
-        loading: false,
+        loadingAuth: false,
         error: null,
       };
 
     case AUTH_FAILED:
       return {
         ...state,
-        loading: false,
-        error: action.error.message || 'Authenticated Failed. Please try again',
+        loadingAuth: false,
+        error: action.error || 'Authenticated Failed. Please try again',
       };
     default:
       return state;
