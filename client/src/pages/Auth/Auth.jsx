@@ -1,6 +1,7 @@
 import { useState, memo, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UilSpinnerAlt } from '@iconscout/react-unicons';
+import toast from 'react-hot-toast';
 
 import {
   loginUserAction,
@@ -26,10 +27,14 @@ const Auth = () => {
 
   useEffect(() => {
     setErrorMsg(error);
+    error && toast.error(error);
   }, [error]);
 
   useEffect(() => {
-    return controller.abort();
+    return () => {
+      controller.abort();
+    };
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

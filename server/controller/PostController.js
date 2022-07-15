@@ -177,7 +177,6 @@ export const getTimelinePosts = async (req, res, next) => {
 };
 
 export const uploadImage = (req, res, next) => {
-  console.log(123);
   try {
     return res.status(200).json({
       status: true,

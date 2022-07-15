@@ -27,7 +27,6 @@ export const updatePostAction = (formData) => async (dispatch) => {
   try {
     dispatch({ type: POST_SHARE_START });
     const { data } = await uploadPostApi(formData);
-    console.log('123', data);
     dispatch({ type: POST_SHARE_SUCCESS, data });
   } catch (error) {
     dispatch({

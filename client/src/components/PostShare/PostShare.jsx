@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   UilScenery,
@@ -6,7 +6,9 @@ import {
   UilLocationPoint,
   UilSchedule,
   UilTimes,
+  UilSpinnerAlt,
 } from '@iconscout/react-unicons';
+import toast from 'react-hot-toast';
 
 import './PostShare.css';
 import {
@@ -18,10 +20,27 @@ const PostShare = () => {
   const [image, setImage] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
-  const { user } = useSelector((state) => state.authReducer.authData);
-
   const imageRef = useRef();
   const descRef = useRef();
+  const formRef = useRef();
+
+  const { user } = useSelector((state) => state.authReducer.authData);
+  const { loadingPosts, error, loadingImage, message } = useSelector(
+    (state) => state.postReducer
+  );
+
+  useEffect(() => {
+    setErrorMsg(error);
+    error && toast.error(error);
+  }, [error]);
+
+  useEffect(() => {
+    message && toast.success(message);
+    formRef.current.reset();
+    setErrorMsg(null);
+    setImage(null);
+    descRef.current.value = '';
+  }, [message]);
 
   const dispatch = useDispatch();
 
@@ -62,7 +81,7 @@ const PostShare = () => {
     <div className='postShare'>
       <img src={require('../../img/profileImg.jpg')} alt='profile-img' />
       <div className='inputDiv' onSubmit={handleShare}>
-        <form className='form'>
+        <form className='form' ref={formRef}>
           <input
             type='text'
             placeholder="What's happending"
@@ -93,8 +112,16 @@ const PostShare = () => {
               <UilSchedule />
               Schedule
             </div>
-            <button className='button ps-button' type='submit'>
-              Share
+            <button
+              className='button ps-button'
+              type='submit'
+              disabled={loadingImage || loadingPosts}
+            >
+              {loadingImage || loadingPosts ? (
+                <UilSpinnerAlt className='loadingButton' />
+              ) : (
+                'Share'
+              )}
             </button>
             <div style={{ display: 'none' }}>
               <input
