@@ -7,7 +7,6 @@ import {
   updatePostById,
   likeOrDislikePostById,
   getTimelinePosts,
-  uploadImage,
 } from '../controller/PostController.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
@@ -19,6 +18,5 @@ router.get('/:id', authMiddleware, getPostById);
 router.put('/:id', authMiddleware, updatePostById);
 router.put('/:id/like', authMiddleware, likeOrDislikePostById);
 router.delete('/:id', authMiddleware, deletePostById);
-router.post('/image/upload', uploadMulter.single('file'), uploadImage);
 
 export default router;

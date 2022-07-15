@@ -60,6 +60,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: 'My Workplace',
     },
+    country: {
+      type: String,
+      default: 'United States',
+    },
     relationshipStatus: {
       type: String,
       default: 'relationshipStatus',
@@ -104,6 +108,10 @@ UserSchema.methods.toJSON = function () {
 
   delete userObj.password;
   delete userObj.tokens;
+  delete userObj.isAdmin;
+  delete userObj.createdAt;
+  delete userObj.updatedAt;
+  delete userObj.__v;
 
   return userObj;
 };

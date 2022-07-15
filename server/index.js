@@ -6,6 +6,7 @@ import cors from 'cors';
 import AuthRoute from './route/AuthRoute.js';
 import UserRoute from './route/UserRoute.js';
 import PostRoute from './route/PostRoute.js';
+import MediaRoute from './route/MediaRoute.js';
 import { ErrorHandler } from './middleware/errorHandler.js';
 
 // variables and config
@@ -42,6 +43,7 @@ app.use('/images', express.static('images'));
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);
 app.use('/api/post', PostRoute);
+app.use('/api/media', MediaRoute);
 
 app.use(ErrorHandler);
 
