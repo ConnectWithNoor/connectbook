@@ -7,10 +7,21 @@ import {
   LOGOUT_SUCCESS,
 } from './AuthActionTypes';
 
+import {
+  UPDATE_PROFILE_COVER_IMAGE_FAILED,
+  UPDATE_PROFILE_COVER_IMAGE_START,
+  UPDATE_PROFILE_COVER_IMAGE_SUCCESS,
+  UPDATE_PROFILE_INFO_FAILED,
+  UPDATE_PROFILE_INFO_START,
+  UPDATE_PROFILE_INFO_SUCCESS,
+} from './ProfileModel/ProfileModelActionTypes';
+
 const initialState = {
   authData: null,
   loadingAuth: false,
+  loadingUserProfile: false,
   error: null,
+  message: null,
 };
 
 const authReducer = (state = initialState, action) => {
@@ -21,6 +32,17 @@ const authReducer = (state = initialState, action) => {
         ...state,
         loadingAuth: true,
         error: null,
+        loadingUserProfile: false,
+        message: null,
+      };
+    case UPDATE_PROFILE_COVER_IMAGE_START:
+    case UPDATE_PROFILE_INFO_START:
+      return {
+        ...state,
+        loadingUserProfile: true,
+        loadingAuth: false,
+        error: null,
+        message: null,
       };
 
     case AUTH_SUCCESS:
@@ -30,19 +52,48 @@ const authReducer = (state = initialState, action) => {
         authData: action.data,
         loadingAuth: false,
         error: null,
+        loadingUserProfile: false,
+        message: null,
       };
 
     case LOGOUT_SUCCESS:
+      localStorage.clear();
       return {
         ...initialState,
       };
 
+    case UPDATE_PROFILE_COVER_IMAGE_SUCCESS:
+      return {
+        ...state,
+        loadingUserProfile: false,
+        error: null,
+        message: action.data?.message || 'Image updated successfully',
+      };
+
+    case UPDATE_PROFILE_INFO_SUCCESS:
+      const authData = {
+        ...state.authData,
+        user: action.data,
+      };
+      return {
+        ...state,
+        loadingUserProfile: false,
+        error: null,
+        loadingAuth: false,
+        message: null,
+        authData,
+      };
+
     case AUTH_FAILED:
     case LOGOUT_FAILED:
+    case UPDATE_PROFILE_COVER_IMAGE_FAILED:
+    case UPDATE_PROFILE_INFO_FAILED:
       return {
         ...state,
         loadingAuth: false,
         error: action.error || 'Authenticated Failed. Please try again',
+        loadingUserProfile: false,
+        message: null,
       };
     default:
       return state;

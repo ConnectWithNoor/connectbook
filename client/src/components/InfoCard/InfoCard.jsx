@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { UilPen } from '@iconscout/react-unicons';
+import { UilPen, UilSpinnerAlt } from '@iconscout/react-unicons';
 import ProfileModel from '../ProfileModel/ProfileModel';
 
 import './InfoCard.css';
@@ -19,18 +19,22 @@ const InfoCard = () => {
   const [errorMsg, setErrorMsg] = useState(null);
 
   const { user } = useSelector((state) => state.authReducer.authData);
+  const { loadingUserProfile } = useSelector((state) => state.authReducer);
+
+  const fetchUser = async () => {
+    if (params.id === user._id) return setProfileUser(user);
+    else {
+      const profileUser = await getUserByIdApi(
+        params.id,
+        controllerRef.current
+      );
+      return setProfileUser(profileUser);
+    }
+  };
 
   useEffect(() => {
     const controller = new AbortController();
     controllerRef.current = controller;
-
-    const fetchUser = async () => {
-      if (params.id === user._id) return setProfileUser(user);
-      else {
-        const profileUser = await getUserByIdApi(params.id, controller);
-        return setProfileUser(profileUser);
-      }
-    };
 
     try {
       fetchUser();
@@ -42,6 +46,11 @@ const InfoCard = () => {
     return () => controller.abort();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    fetchUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [user]);
 
   const handleLogout = () => {
     try {
@@ -58,14 +67,20 @@ const InfoCard = () => {
         <h4>Your Info</h4>
         {user._id === params.id && (
           <div>
-            <UilPen
-              width='2rem'
-              height='1.2rem'
-              onClick={() => setModalOpened(true)}
-            />
+            {loadingUserProfile ? (
+              <UilSpinnerAlt className='loadingButton' />
+            ) : (
+              <UilPen
+                width='2rem'
+                height='1.2rem'
+                onClick={() => setModalOpened(true)}
+              />
+            )}
+
             <ProfileModel
               modalOpened={modalOpened}
               setModalOpened={setModalOpened}
+              user={user}
             />
           </div>
         )}

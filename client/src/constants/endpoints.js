@@ -11,10 +11,11 @@ export const POST_GET_TIMELINE = '/post/timeline'; //done
 export const POST_UPDATE_BY_ID = '/post/';
 export const POST_LIKE_UNLIKE_BY_ID = '/post/'; // done
 export const POST_DELETE_BY_ID = '/post/';
-export const POST_IMAGE_UPLOAD = '/post/image/upload'; //done
+
+export const IMAGE_UPLOAD = '/media/image/upload'; //done
 
 export const USER_GET_BY_ID = '/user/'; //done need testing
-export const USER_UPDATE_BY_ID = '/user/';
+export const USER_UPDATE_BY_ID = '/user/'; //done
 export const USER_DELETE_BY_ID = '/user/';
 export const USER_FOLLOW_BY_ID = '/user/';
 export const USER_UNFOLLOW_BY_ID = '/user/';

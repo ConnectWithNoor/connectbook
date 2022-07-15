@@ -1,12 +1,15 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { SERVER_PUBLIC_IMAGE_FOLDER } from '../../constants/variables';
+import { UilSpinnerAlt } from '@iconscout/react-unicons';
 
+import { SERVER_PUBLIC_IMAGE_FOLDER } from '../../constants/variables';
 import './ProfileCard.css';
-import { useEffect, useState } from 'react';
 
 const ProfileCard = ({ isProfilePage }) => {
   const { user } = useSelector((state) => state.authReducer.authData);
+  const { loadingUserProfile } = useSelector((state) => state.authReducer);
+
   const { posts } = useSelector((state) => state.postReducer);
   const [postCount, setPostCount] = useState(0);
 
@@ -18,7 +21,6 @@ const ProfileCard = ({ isProfilePage }) => {
   return (
     <div className='profileCard'>
       <div className='profileImages'>
-        {/* <img src={require('../../img/cover.jpg')} alt='cover-img' /> */}
         <img
           src={
             user.coverPicture
@@ -38,10 +40,18 @@ const ProfileCard = ({ isProfilePage }) => {
       </div>
 
       <div className='profileName'>
-        <span>
-          {user.firstName} {user.lastName}
-        </span>
-        <span>{user.worksAt ? user.worksAt : 'Where do you work?'}</span>
+        {loadingUserProfile ? (
+          <span>
+            <UilSpinnerAlt className='loadingButton' />
+          </span>
+        ) : (
+          <>
+            <span>
+              {user.firstName} {user.lastName}
+            </span>
+            <span>{user.worksAt ? user.worksAt : 'Where do you work?'}</span>
+          </>
+        )}
       </div>
 
       <div className='followStatus'>

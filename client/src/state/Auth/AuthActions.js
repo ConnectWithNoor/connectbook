@@ -35,6 +35,10 @@ export const registerUserAction =
       dispatch({ type: AUTH_START });
       const { data } = await registerUserApi(formData, controller);
 
+      AxiosAuthInterceptor.defaults.headers = {
+        Authorization: `Bearer ${data.accessToken}`,
+      };
+
       dispatch({ type: AUTH_SUCCESS, data });
     } catch (error) {
       dispatch({ type: AUTH_FAILED, error: error?.response?.data?.message });

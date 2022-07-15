@@ -1,8 +1,105 @@
+import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { Modal, useMantineTheme } from '@mantine/core';
+import toast from 'react-hot-toast';
+
+import {
+  updateProfileCoverImageAction,
+  updateProfileInfoAction,
+} from '../../state/Auth/ProfileModel/ProfileModelActions.js';
+
 import '../../pages/Auth/Auth.css';
 
-const ProfileModel = ({ modalOpened, setModalOpened }) => {
+const ProfileModel = ({ modalOpened, setModalOpened, user }) => {
   const theme = useMantineTheme();
+  const [formData, setFormData] = useState(null);
+  const [profilePicture, setProfilePicture] = useState(null);
+  const [coverPicture, setCoverPicture] = useState(null);
+
+  const { message, error } = useSelector((state) => state.authReducer);
+
+  useEffect(() => {
+    setFormData(user);
+  }, [user]);
+
+  const dispatch = useDispatch();
+  const params = useParams();
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  useEffect(() => {
+    error &&
+      toast.error(error, {
+        id: 'profile-component-error',
+      });
+  }, [error]);
+
+  useEffect(() => {
+    message &&
+      toast.success(message, {
+        id: 'profile-component-success',
+      });
+  }, [message]);
+
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files[0]) {
+      const img = e.target.files[0];
+      e.target.name === 'profilePicture'
+        ? setProfilePicture(img)
+        : setCoverPicture(img);
+    }
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const data = formData;
+
+    if (profilePicture) {
+      const dataProfilePicture = new FormData();
+      const fileName = Date.now() + profilePicture.name;
+      dataProfilePicture.append('name', fileName);
+      dataProfilePicture.append('file', profilePicture);
+      data.profilePicture = fileName;
+
+      try {
+        dispatch(updateProfileCoverImageAction(dataProfilePicture));
+      } catch (error) {
+        toast.error('Unable to update. Please try again', {
+          id: 'profile-component-error',
+        });
+        console.error(error);
+      }
+    }
+
+    if (coverPicture) {
+      const dataCoverPicture = new FormData();
+      const fileName = Date.now() + coverPicture.name;
+      dataCoverPicture.append('name', fileName);
+      dataCoverPicture.append('file', coverPicture);
+      data.coverPicture = fileName;
+
+      try {
+        dispatch(updateProfileCoverImageAction(dataCoverPicture));
+      } catch (error) {
+        toast.error('Unable to update. Please try again', {
+          id: 'profile-component-error',
+        });
+        console.error(error);
+      }
+    }
+
+    dispatch(updateProfileInfoAction(params.id, data));
+    setProfilePicture(null);
+    setCoverPicture(null);
+    setModalOpened(false);
+  };
+
   return (
     <div className='profileModel'>
       <Modal
@@ -17,7 +114,7 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
         opened={modalOpened}
         onClose={() => setModalOpened(false)}
       >
-        <form className='infoForm'>
+        <form className='infoForm' onSubmit={handleSubmit}>
           <h3>Your info</h3>
           <div>
             <input
@@ -25,6 +122,9 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='firstName'
               placeholder='First Name'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.firstName}
+              required
             />
 
             <input
@@ -32,6 +132,9 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='lastName'
               placeholder='Last Name'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.lastName}
+              required
             />
           </div>
 
@@ -41,6 +144,8 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='worksAt'
               placeholder='Works at'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.worksAt}
             />
           </div>
 
@@ -50,6 +155,8 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='livesIn'
               placeholder='Lives In'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.livesIn}
             />
 
             <input
@@ -57,6 +164,8 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='country'
               placeholder='Country'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.country}
             />
           </div>
 
@@ -66,17 +175,29 @@ const ProfileModel = ({ modalOpened, setModalOpened }) => {
               name='relationshipStatus'
               placeholder='Relationship Status'
               className='infoInput'
+              onChange={handleChange}
+              value={formData?.relationshipStatus}
             />
           </div>
 
           <div>
             Profile Image
-            <input type='file' name='profileImage' />
+            <input
+              type='file'
+              name='profilePicture'
+              onChange={handleImageChange}
+            />
             Cover Image
-            <input type='file' name='coverImage' />
+            <input
+              type='file'
+              name='coverPicture'
+              onChange={handleImageChange}
+            />
           </div>
 
-          <button className='button infoButton'>Update</button>
+          <button className='button infoButton' type='submit'>
+            Update
+          </button>
         </form>
       </Modal>
     </div>
