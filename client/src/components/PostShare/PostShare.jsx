@@ -9,7 +9,10 @@ import {
 } from '@iconscout/react-unicons';
 
 import './PostShare.css';
-import { updateImageAction } from '../../state/PostShare/PostShareActions';
+import {
+  updateImageAction,
+  updatePostAction,
+} from '../../state/PostShare/PostShareActions';
 
 const PostShare = () => {
   const [image, setImage] = useState(null);
@@ -48,6 +51,7 @@ const PostShare = () => {
     newPost.image = fileName;
     try {
       dispatch(updateImageAction(data));
+      dispatch(updatePostAction(newPost));
     } catch (error) {
       setErrorMsg('Problem occured in uploading post. Please try again');
       console.error(error);

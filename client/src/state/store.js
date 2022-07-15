@@ -19,12 +19,14 @@ const loadFromLocalStorage = () => {
   return serializedStore;
 };
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
 const persistState = loadFromLocalStorage();
 
 const store = createStore(
   reducers,
   persistState,
-  compose(applyMiddleware(thunk))
+  composeEnhancers(applyMiddleware(thunk))
 );
 
 // store.subscribe(() => saveToLocalStorage(store.getState()));

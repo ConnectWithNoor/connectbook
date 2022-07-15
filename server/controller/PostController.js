@@ -7,9 +7,9 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 // create new Post
 export const createPost = async (req, res, next) => {
   const userId = req.user._id.toString();
-  const { description } = req.body;
+  const { description, image } = req.body;
 
-  const newPost = new PostModel({ userId, description });
+  const newPost = new PostModel({ userId, description, image });
 
   try {
     await newPost.save();
@@ -185,7 +185,7 @@ export const uploadImage = (req, res, next) => {
     });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: uploadImage, line: 184`,
+      `Error: File: PostController, func: uploadImage, line: 188`,
       error
     );
     return next(ErrorHandler(error, req, res, next));
