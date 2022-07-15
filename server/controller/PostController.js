@@ -106,14 +106,14 @@ export const likeOrDislikePostById = async (req, res, next) => {
       await post.save();
       return res
         .status(200)
-        .json({ status: true, message: 'Post liked successfully' });
+        .json({ status: true, message: 'Post liked added', post });
     } else {
       //   if post is already liked by the user. Unlike it
       post.likes = post.likes.filter((id) => id === userId);
       await post.save();
       return res
         .status(200)
-        .json({ status: true, message: 'Post unliked successfully' });
+        .json({ status: true, message: 'Post liked removed', post });
     }
   } catch (error) {
     console.error(

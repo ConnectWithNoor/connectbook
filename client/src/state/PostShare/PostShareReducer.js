@@ -2,6 +2,9 @@ import {
   GET_POST_TIMELINE_SUCCESS,
   GET_POST_TIMELINE_FAILED,
   GET_POST_TIMELINE_START,
+  POST_LIKE_UNLIKE_FAILED,
+  POST_LIKE_UNLIKE_START,
+  POST_LIKE_UNLIKE_SUCCESS,
 } from './PostFeed/PostFeedActionsTypes';
 import {
   POST_SHARE_START,
@@ -24,6 +27,7 @@ const postReducer = (state = initialState, action) => {
   switch (action.type) {
     case POST_SHARE_START:
     case GET_POST_TIMELINE_START:
+    case POST_LIKE_UNLIKE_START:
       return { ...state, loadingPosts: true, error: null };
 
     case POST_SHARE_SUCCESS:
@@ -35,8 +39,19 @@ const postReducer = (state = initialState, action) => {
         error: null,
       };
 
+    case POST_LIKE_UNLIKE_SUCCESS:
+      const newArr = state.posts.map((item) =>
+        item._id === action?.data?.post?._id ? action?.data?.post : item
+      );
+      return {
+        ...state,
+        posts: [...newArr],
+        loadingPosts: false,
+        error: null,
+        message: action?.data?.message,
+      };
+
     case POST_SHARE_FAILED:
-      // case GET_POST_TIMELINE_FAILED:
       return {
         ...state,
         loadingPosts: false,
@@ -44,10 +59,12 @@ const postReducer = (state = initialState, action) => {
       };
 
     case GET_POST_TIMELINE_FAILED:
+    case POST_LIKE_UNLIKE_FAILED:
       return {
         ...state,
         loadingPosts: false,
         error: action.error,
+        message: null,
       };
 
     case POST_IMAGE_UPLOAD_START:

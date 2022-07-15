@@ -1,8 +1,14 @@
-import { getPostFeedTimelineApi } from '../../../api/PostFeedApi';
+import {
+  getPostFeedTimelineApi,
+  LikeUnlikePostApi,
+} from '../../../api/PostFeedApi';
 import {
   GET_POST_TIMELINE_FAILED,
   GET_POST_TIMELINE_START,
   GET_POST_TIMELINE_SUCCESS,
+  POST_LIKE_UNLIKE_START,
+  POST_LIKE_UNLIKE_SUCCESS,
+  POST_LIKE_UNLIKE_FAILED,
 } from './PostFeedActionsTypes';
 
 export const getPostFeedTimelineAction = (controller) => async (dispatch) => {
@@ -19,3 +25,19 @@ export const getPostFeedTimelineAction = (controller) => async (dispatch) => {
     console.error(error);
   }
 };
+
+export const LikeUnlikePostAction =
+  (postId, controller) => async (dispatch) => {
+    dispatch({ type: POST_LIKE_UNLIKE_START });
+
+    try {
+      const { data } = await LikeUnlikePostApi(postId, controller);
+      dispatch({ type: POST_LIKE_UNLIKE_SUCCESS, data });
+    } catch (error) {
+      dispatch({
+        type: POST_LIKE_UNLIKE_FAILED,
+        error: error?.response?.data?.message,
+      });
+      console.error(error);
+    }
+  };

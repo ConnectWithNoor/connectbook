@@ -9,9 +9,7 @@ const PostsFeed = () => {
   const dispatch = useDispatch();
 
   const { user } = useSelector((state) => state.authReducer.authData);
-  const { posts, loadingPosts, loadingImage } = useSelector(
-    (state) => state.postReducer
-  );
+  const { posts, loadingImage } = useSelector((state) => state.postReducer);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -24,9 +22,7 @@ const PostsFeed = () => {
   return (
     <div className='postsFeed'>
       {!loadingImage &&
-        !loadingPosts &&
         posts.map((post, id) => {
-          console.log('post', post);
           return <Post key={id} data={post} />;
         })}
     </div>

@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import './ProfileCard.css';
 
 const ProfileCard = () => {
-  const profilePage = true;
+  const [isProfilePage] = useState(false);
   return (
     <div className='profileCard'>
       <div className='profileImages'>
@@ -27,7 +28,7 @@ const ProfileCard = () => {
             <span>1</span>
             <span>Followers</span>
           </div>
-          {profilePage && (
+          {isProfilePage && (
             <>
               <div className='vl'></div>
               <div className='follow'>
@@ -39,7 +40,7 @@ const ProfileCard = () => {
         </div>
         <hr />
       </div>
-      {!profilePage && <span>My Profile</span>}
+      {!isProfilePage && <span>My Profile</span>}
     </div>
   );
 };

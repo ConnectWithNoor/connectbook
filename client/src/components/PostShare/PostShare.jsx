@@ -17,6 +17,7 @@ import {
 } from '../../state/PostShare/PostShareActions';
 
 const PostShare = () => {
+  const controller = new AbortController();
   const [image, setImage] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
 
@@ -40,6 +41,11 @@ const PostShare = () => {
     setImage(null);
     descRef.current.value = '';
   }, [message]);
+
+  useEffect(() => {
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const dispatch = useDispatch();
 
@@ -67,8 +73,8 @@ const PostShare = () => {
     data.append('file', image);
     newPost.image = fileName;
     try {
-      dispatch(updateImageAction(data));
-      dispatch(updatePostAction(newPost));
+      dispatch(updateImageAction(data, controller));
+      dispatch(updatePostAction(newPost, controller));
     } catch (error) {
       setErrorMsg('Problem occured in uploading post. Please try again');
       console.error(error);
