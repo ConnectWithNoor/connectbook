@@ -28,15 +28,20 @@ const postReducer = (state = initialState, action) => {
     case POST_SHARE_START:
     case GET_POST_TIMELINE_START:
     case POST_LIKE_UNLIKE_START:
-      return { ...state, loadingPosts: true, error: null };
+      return { ...state, loadingPosts: true, error: null, message: null };
 
     case POST_SHARE_SUCCESS:
     case GET_POST_TIMELINE_SUCCESS:
+      const temp = [...state.posts, ...action.data];
+      const uniqueArray = Array.from(new Set(temp.map(JSON.stringify))).map(
+        JSON.parse
+      );
       return {
         ...state,
-        posts: [...action.data, ...state.posts],
+        posts: [...uniqueArray],
         loadingPosts: false,
         error: null,
+        message: null,
       };
 
     case POST_LIKE_UNLIKE_SUCCESS:
@@ -56,6 +61,7 @@ const postReducer = (state = initialState, action) => {
         ...state,
         loadingPosts: false,
         error: action.error || 'Post Sharing Failed. Please try again',
+        message: null,
       };
 
     case GET_POST_TIMELINE_FAILED:

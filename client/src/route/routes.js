@@ -22,6 +22,12 @@ const ROUTES_LIST = [
     element: Profile,
   },
   {
+    path: '/profile/:id',
+    isProtected: true,
+    key: 'PROFILE_ROUTE_ID',
+    element: Profile,
+  },
+  {
     path: '*',
     isProtected: false,
     key: 'NOT_FOUND_ROUTE',

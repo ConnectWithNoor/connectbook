@@ -9,7 +9,7 @@ export const POST_CREATE = '/post/create'; //done
 export const POST_GET_BY_ID = '/post/';
 export const POST_GET_TIMELINE = '/post/timeline'; //done
 export const POST_UPDATE_BY_ID = '/post/';
-export const POST_LIKE_UNLIKE_BY_ID = '/post/';
+export const POST_LIKE_UNLIKE_BY_ID = '/post/'; // done
 export const POST_DELETE_BY_ID = '/post/';
 export const POST_IMAGE_UPLOAD = '/post/image/upload'; //done
 

@@ -87,3 +87,8 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.dispose-Link {
+  text-decoration: none;
+  color: inherit;
+}

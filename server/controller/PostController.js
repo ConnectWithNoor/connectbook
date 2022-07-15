@@ -13,6 +13,7 @@ export const createPost = async (req, res, next) => {
 
   try {
     await newPost.save();
+    await newPost.populate('userId');
     res.status(200).json([newPost]);
   } catch (error) {
     console.error(

@@ -7,7 +7,7 @@ const ProfileSide = () => {
   return (
     <div className='profileSide'>
       <LogoSearch />
-      <ProfileCard />
+      <ProfileCard isProfilePage={false} />
       <FollowersCard />
     </div>
   );

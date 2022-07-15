@@ -1,12 +1,14 @@
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { UilSetting } from '@iconscout/react-unicons';
+
 import Home from '../../img/home.png';
 import Noti from '../../img/noti.png';
 import Comment from '../../img/comment.png';
-import { UilSetting } from '@iconscout/react-unicons';
 
 import TrendCard from './TrendCard/TrendCard';
-import { useState } from 'react';
-import './RightSide.css';
 import ShareModal from '../shareModal/shareModal';
+import './RightSide.css';
 
 const RightSide = () => {
   const [modalOpened, setModalOpened] = useState(false);
@@ -14,7 +16,9 @@ const RightSide = () => {
   return (
     <div className='rightSide'>
       <div className='navIcons'>
-        <img src={Home} alt='home' />
+        <Link className='dispose-Link' to='/home'>
+          <img src={Home} alt='home' />
+        </Link>
         <UilSetting />
         <img src={Noti} alt='noti' />
         <img src={Comment} alt='comment' />

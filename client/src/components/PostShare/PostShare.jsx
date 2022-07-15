@@ -15,6 +15,7 @@ import {
   updateImageAction,
   updatePostAction,
 } from '../../state/PostShare/PostShareActions';
+import { SERVER_PUBLIC_IMAGE_FOLDER } from '../../constants/variables';
 
 const PostShare = () => {
   const controller = new AbortController();
@@ -25,6 +26,7 @@ const PostShare = () => {
   const descRef = useRef();
   const formRef = useRef();
 
+  const { user } = useSelector((state) => state.authReducer.authData);
   const { loadingPosts, error, loadingImage, message } = useSelector(
     (state) => state.postReducer
   );
@@ -35,7 +37,11 @@ const PostShare = () => {
   }, [error]);
 
   useEffect(() => {
-    message && toast.success(message);
+    message &&
+      !message.includes('Post') &&
+      toast.success(message, {
+        id: 'image-uploaded',
+      });
     formRef.current.reset();
     setErrorMsg(null);
     setImage(null);
@@ -83,7 +89,14 @@ const PostShare = () => {
 
   return (
     <div className='postShare'>
-      <img src={require('../../img/profileImg.jpg')} alt='profile-img' />
+      <img
+        src={
+          user.profilePicture
+            ? `${SERVER_PUBLIC_IMAGE_FOLDER}${user.profilePicture}`
+            : `${SERVER_PUBLIC_IMAGE_FOLDER}profileImg.jpg`
+        }
+        alt='profile-img'
+      />
       <div className='inputDiv' onSubmit={handleShare}>
         <form className='form' ref={formRef}>
           <input

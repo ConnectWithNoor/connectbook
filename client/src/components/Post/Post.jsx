@@ -10,6 +10,7 @@ import Like from '../../img/like.png';
 import NotLiked from '../../img/notlike.png';
 
 import './Post.css';
+import { SERVER_PUBLIC_IMAGE_FOLDER } from '../../constants/variables';
 
 const Post = ({ data }) => {
   const controller = new AbortController();
@@ -35,7 +36,11 @@ const Post = ({ data }) => {
   }, [error]);
 
   useEffect(() => {
-    message && toast.success(message);
+    message &&
+      !message.includes('image') &&
+      toast.success(message, {
+        id: 'post-component',
+      });
     setErrorMsg(null);
   }, [message]);
 
@@ -57,11 +62,7 @@ const Post = ({ data }) => {
   return (
     <div className='post'>
       <img
-        src={
-          data.image
-            ? `${process.env.REACT_APP_SERVER_PUBLIC_IMAGE_FOLDER}${data.image}`
-            : ''
-        }
+        src={data.image ? `${SERVER_PUBLIC_IMAGE_FOLDER}${data.image}` : ''}
         alt='post-img'
       />
 
