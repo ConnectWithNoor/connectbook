@@ -8,7 +8,7 @@ export const loginUserAction = (formData, controller) => async (dispatch) => {
 
     dispatch({ type: AUTH_SUCCESS, data });
   } catch (error) {
-    dispatch({ type: AUTH_FAILED, error: error.response.data.message });
+    dispatch({ type: AUTH_FAILED, error: error?.response?.data?.message });
     console.error(error);
   }
 };
