@@ -1,49 +1,97 @@
+import { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import { UilPen } from '@iconscout/react-unicons';
-import { useState } from 'react';
 import ProfileModel from '../ProfileModel/ProfileModel';
 
 import './InfoCard.css';
+import { useEffect } from 'react';
+import { getUserByIdApi } from '../../api/InfoCardApi';
+import { logoutUserAction } from '../../state/Auth/AuthActions';
 
 const InfoCard = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
+  const controllerRef = useRef(null);
+
   const [modalOpened, setModalOpened] = useState(false);
+  const [profileUser, setProfileUser] = useState({});
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  const { user } = useSelector((state) => state.authReducer.authData);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    controllerRef.current = controller;
+
+    const fetchUser = async () => {
+      if (params.id === user._id) return setProfileUser(user);
+      else {
+        const profileUser = await getUserByIdApi(params.id, controller);
+        return setProfileUser(profileUser);
+      }
+    };
+
+    try {
+      fetchUser();
+    } catch (error) {
+      setErrorMsg('Not able to perform the action. Please try again');
+      console.error(error);
+    }
+
+    return () => controller.abort();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleLogout = () => {
+    try {
+      dispatch(logoutUserAction(controllerRef.current));
+    } catch (error) {
+      setErrorMsg('Not able to perform the action. Please try again');
+      console.error(error);
+    }
+  };
+
   return (
     <div className='infoCard'>
       <div className='infoHead'>
         <h4>Your Info</h4>
-        <div>
-          <UilPen
-            width='2rem'
-            height='1.2rem'
-            onClick={() => setModalOpened(true)}
-          />
-          <ProfileModel
-            modalOpened={modalOpened}
-            setModalOpened={setModalOpened}
-          />
-        </div>
+        {user._id === params.id && (
+          <div>
+            <UilPen
+              width='2rem'
+              height='1.2rem'
+              onClick={() => setModalOpened(true)}
+            />
+            <ProfileModel
+              modalOpened={modalOpened}
+              setModalOpened={setModalOpened}
+            />
+          </div>
+        )}
       </div>
-
       <div className='info'>
         <span>
           <b>Status </b>
         </span>
-        <span>In relationship</span>
+        <span>{profileUser.relationshipStatus}</span>
       </div>
-
       <div className='info'>
         <span>
           <b>Lives in </b>
         </span>
-        <span>Multan</span>
+        <span>{profileUser.livesIn}</span>
       </div>
-
       <div className='info'>
         <span>
           <b>Works at </b>
         </span>
-        <span>Optimyse</span>
+        <span>{profileUser.worksAt}</span>
       </div>
-      <button className='button logout-button'>Logout</button>
+      <button className='button logout-button' onClick={handleLogout}>
+        Logout
+      </button>
+      <span className='error-msg'>{errorMsg}</span>
     </div>
   );
 };

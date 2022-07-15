@@ -1,4 +1,11 @@
-import { AUTH_FAILED, AUTH_START, AUTH_SUCCESS } from './AuthActionTypes';
+import {
+  AUTH_FAILED,
+  AUTH_START,
+  AUTH_SUCCESS,
+  LOGOUT_START,
+  LOGOUT_FAILED,
+  LOGOUT_SUCCESS,
+} from './AuthActionTypes';
 
 const initialState = {
   authData: null,
@@ -9,6 +16,7 @@ const initialState = {
 const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_START:
+    case LOGOUT_START:
       return {
         ...state,
         loadingAuth: true,
@@ -24,7 +32,13 @@ const authReducer = (state = initialState, action) => {
         error: null,
       };
 
+    case LOGOUT_SUCCESS:
+      return {
+        ...initialState,
+      };
+
     case AUTH_FAILED:
+    case LOGOUT_FAILED:
       return {
         ...state,
         loadingAuth: false,

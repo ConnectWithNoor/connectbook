@@ -2,6 +2,7 @@ import jwt from 'jsonwebtoken';
 
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
+import { ErrorHandler } from './errorHandler.js';
 
 export const authMiddleware = async (req, res, next) => {
   try {
