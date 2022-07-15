@@ -67,3 +67,23 @@ body {
   background: silver;
   pointer-events: none;
 }
+
+.error-msg {
+  color: red;
+  font-size: 0.8rem;
+  align-self: flex-end;
+  margin-right: 5px;
+}
+
+.loadingButton {
+  animation: rotation 2s infinite linear;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

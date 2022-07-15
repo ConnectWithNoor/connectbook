@@ -19,7 +19,12 @@
   gap: 1rem;
 }
 
-.inputDiv > input {
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.inputDiv > .form > input {
   background-color: var(--inputColor);
   border-radius: 0.7rem;
   padding: 0.7rem;

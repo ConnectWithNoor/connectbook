@@ -1,7 +1,7 @@
-import mongoose from 'mongoose';
+// import mongoose from 'mongoose';
 import { ErrorHandler } from '../middleware/errorHandler.js';
 import PostModel from '../model/PostModel.js';
-import UserModel from '../model/UserModel.js';
+// import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 // create new Post
@@ -170,6 +170,22 @@ export const getTimelinePosts = async (req, res, next) => {
   } catch (error) {
     console.error(
       `Error: File: PostController, func: getTimelinePosts, line: 172`,
+      error
+    );
+    return next(ErrorHandler(error, req, res, next));
+  }
+};
+
+export const uploadImage = (req, res, next) => {
+  console.log(123);
+  try {
+    return res.status(200).json({
+      status: true,
+      message: 'image uploaded successfully',
+    });
+  } catch (error) {
+    console.error(
+      `Error: File: PostController, func: uploadImage, line: 184`,
       error
     );
     return next(ErrorHandler(error, req, res, next));

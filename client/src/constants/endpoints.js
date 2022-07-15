@@ -1,7 +1,7 @@
 export const BASE_URL = 'http://localhost:5000/api';
 
-export const AUTH_REGISTER = '/auth/register';
-export const AUTH_LOGIN = '/auth/login';
+export const AUTH_REGISTER = '/auth/register'; //done
+export const AUTH_LOGIN = '/auth/login'; //done
 export const AUTH_NEW_REFRESH_TOKEN = '/auth/refresh';
 export const AUTH_LOGOUT = '/auth/logout';
 
@@ -11,6 +11,7 @@ export const POST_GET_TIMELINE = '/post/timeline';
 export const POST_UPDATE_BY_ID = '/post/';
 export const POST_LIKE_UNLIKE_BY_ID = '/post/';
 export const POST_DELETE_BY_ID = '/post/';
+export const POST_IMAGE_UPLOAD = '/post/image/upload';
 
 export const USER_GET_BY_ID = '/user/';
 export const USER_UPDATE_BY_ID = '/user/';
