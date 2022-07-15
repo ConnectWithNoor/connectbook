@@ -7,6 +7,7 @@ import Profile from './pages/Profile/Profile';
 import './App.css';
 import ProtectedRoute from './route/ProtectedRoute';
 import UnprotectedRoute from './route/UnProtectedRoute';
+import ROUTES_LIST from './route/routes';
 
 function App() {
   return (
@@ -14,30 +15,25 @@ function App() {
       <div className='blur blur-1'></div>
       <div className='blur blur-2'></div>
       <Routes>
-        <Route
-          path='/'
-          element={
-            <UnprotectedRoute>
-              <Auth />
-            </UnprotectedRoute>
-          }
-        />
-        <Route
-          path='/profile'
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/home'
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
-        />
+        {ROUTES_LIST.map((route) => {
+          return (
+            <Route
+              path={route.path}
+              key={route.key}
+              element={
+                route.isProtected ? (
+                  <ProtectedRoute>
+                    <route.element />
+                  </ProtectedRoute>
+                ) : (
+                  <UnprotectedRoute>
+                    <route.element />
+                  </UnprotectedRoute>
+                )
+              }
+            />
+          );
+        })}
       </Routes>
     </div>
   );
