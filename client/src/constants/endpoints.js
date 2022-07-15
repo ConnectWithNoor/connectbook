@@ -3,7 +3,7 @@ export const BASE_URL = 'http://localhost:5000/api';
 export const AUTH_REGISTER = '/auth/register'; //done
 export const AUTH_LOGIN = '/auth/login'; //done
 export const AUTH_NEW_REFRESH_TOKEN = '/auth/refresh';
-export const AUTH_LOGOUT = '/auth/logout';
+export const AUTH_LOGOUT = '/auth/logout'; //done
 
 export const POST_CREATE = '/post/create'; //done
 export const POST_GET_BY_ID = '/post/';
