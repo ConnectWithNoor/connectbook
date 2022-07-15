@@ -34,6 +34,10 @@ app.use(
   })
 );
 
+// middleware to server images
+app.use(express.static('public'));
+app.use('/images', express.static('images'));
+
 // Routes
 app.use('/api/auth', AuthRoute);
 app.use('/api/user', UserRoute);

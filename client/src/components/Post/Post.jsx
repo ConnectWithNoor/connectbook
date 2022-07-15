@@ -8,7 +8,14 @@ import './Post.css';
 const Post = ({ data }) => {
   return (
     <div className='post'>
-      <img src={data.img} alt='post-img' />
+      <img
+        src={
+          data.image
+            ? `${process.env.REACT_APP_SERVER_PUBLIC_IMAGE_FOLDER}${data.image}`
+            : ''
+        }
+        alt='post-img'
+      />
 
       <div className='postReact'>
         <img src={data.liked ? Like : NotLiked} alt='react-icon' />
@@ -16,13 +23,13 @@ const Post = ({ data }) => {
         <img src={Share} alt='react-icon' />
       </div>
 
-      <span className='post-likes'>{data.likes} likes</span>
+      <span className='post-likes'>{data.likes.length} likes</span>
 
       <div className='detail'>
         <span>
           <b>{data.name}</b>
         </span>
-        <span> {data.desc}</span>
+        <span> {data.description}</span>
       </div>
     </div>
   );
