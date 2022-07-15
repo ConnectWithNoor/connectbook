@@ -1,13 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
 
-import Auth from './pages/Auth/Auth';
-import Home from './pages/Home/Home';
-import Profile from './pages/Profile/Profile';
-
-import './App.css';
 import ProtectedRoute from './route/ProtectedRoute';
 import UnprotectedRoute from './route/UnProtectedRoute';
 import ROUTES_LIST from './route/routes';
+
+import './App.css';
 
 function App() {
   return (

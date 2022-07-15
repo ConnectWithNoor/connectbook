@@ -24,7 +24,6 @@ const PostShare = () => {
   const descRef = useRef();
   const formRef = useRef();
 
-  const { user } = useSelector((state) => state.authReducer.authData);
   const { loadingPosts, error, loadingImage, message } = useSelector(
     (state) => state.postReducer
   );
@@ -57,7 +56,6 @@ const PostShare = () => {
     setErrorMsg(null);
 
     const newPost = {
-      userId: user._id,
       description: descRef.current.value,
     };
 

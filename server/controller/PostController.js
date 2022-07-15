@@ -13,7 +13,7 @@ export const createPost = async (req, res, next) => {
 
   try {
     await newPost.save();
-    res.status(200).json(newPost);
+    res.status(200).json([newPost]);
   } catch (error) {
     console.error(
       `Error: File: PostController, func: createPost, line: 18`,

@@ -1,3 +1,5 @@
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 import Comment from '../../img/comment.png';
 import Share from '../../img/share.png';
 import Like from '../../img/like.png';
@@ -6,6 +8,12 @@ import NotLiked from '../../img/notlike.png';
 import './Post.css';
 
 const Post = ({ data }) => {
+  const user = useSelector((state) => state.authReducer.authData);
+  const [liked] = useState(data?.likes?.includes(user._id));
+  const [likesCount] = useState(data?.likes?.length);
+
+  const handleLikeUnlikePost = () => {};
+
   return (
     <div className='post'>
       <img
@@ -18,12 +26,17 @@ const Post = ({ data }) => {
       />
 
       <div className='postReact'>
-        <img src={data.liked ? Like : NotLiked} alt='react-icon' />
-        <img src={Comment} alt='react-icon' />
-        <img src={Share} alt='react-icon' />
+        <img
+          src={liked ? Like : NotLiked}
+          alt='react-icon'
+          style={{ cursor: 'pointer' }}
+          onClick={handleLikeUnlikePost}
+        />
+        <img src={Comment} alt='react-icon' style={{ cursor: 'pointer' }} />
+        <img src={Share} alt='react-icon' style={{ cursor: 'pointer' }} />
       </div>
 
-      <span className='post-likes'>{data.likes.length} likes</span>
+      <span className='post-likes'>{likesCount} likes</span>
 
       <div className='detail'>
         <span>

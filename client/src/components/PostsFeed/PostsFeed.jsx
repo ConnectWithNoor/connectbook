@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getPostFeedTimelineAction } from '../../state/PostFeed/PostFeedActions';
+import { getPostFeedTimelineAction } from '../../state/PostShare/PostFeed/PostFeedActions';
 
 import Post from '../Post/Post';
 import './PostsFeed.css';
@@ -16,7 +16,7 @@ const PostsFeed = () => {
   useEffect(() => {
     const controller = new AbortController();
 
-    dispatch(getPostFeedTimelineAction(user._id, controller));
+    dispatch(getPostFeedTimelineAction(controller));
 
     return () => controller.abort();
   }, [dispatch, user._id]);
@@ -25,8 +25,9 @@ const PostsFeed = () => {
     <div className='postsFeed'>
       {!loadingImage &&
         !loadingPosts &&
-        posts.map((post) => {
-          return <Post key={post.id} data={post} />;
+        posts.map((post, id) => {
+          console.log('post', post);
+          return <Post key={id} data={post} />;
         })}
     </div>
   );
