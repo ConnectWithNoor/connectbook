@@ -87,7 +87,7 @@ export const followUser = async (req, res, next) => {
     const followingUser = await UserModel.findById(currentUserId);
 
     // if the user is already following that user
-    if (TofollowUser.followers.includes(currentUserId))
+    if (followingUser.following.includes(idToFollow))
       return next(new ErrorResponse('You are already following the user', 400));
 
     TofollowUser.followers = TofollowUser.followers.concat(currentUserId);
@@ -96,7 +96,9 @@ export const followUser = async (req, res, next) => {
     await TofollowUser.save();
     await followingUser.save();
 
-    return res.status(200).json({ status: true, message: 'User is followed' });
+    return res
+      .status(200)
+      .json({ status: true, message: 'User is followed', idToFollow });
   } catch (error) {
     console.error(
       `Error: File: UserController, func: followUser, line: 103`,
@@ -109,28 +111,28 @@ export const followUser = async (req, res, next) => {
 
 // unfollow a user
 export const unFollowUser = async (req, res, next) => {
-  const { id: idToFollow } = req.params;
+  const { id: idToUnfollow } = req.params;
   const currentUserId = req.user._id.toString();
 
   try {
-    if (idToFollow === currentUserId) {
+    if (idToUnfollow === currentUserId) {
       return next(new ErrorResponse('You cannot unfollow yourself.', 401));
     }
 
-    const toUnfollowUser = await UserModel.findById(idToFollow);
+    const toUnfollowUser = await UserModel.findById(idToUnfollow);
     const followingUser = await UserModel.findById(currentUserId);
 
     // if the user is already not following that user
-    if (!toUnfollowUser.followers.includes(currentUserId))
+    if (!followingUser.following.includes(idToUnfollow))
       return next(
         new ErrorResponse('You are already not following the user', 400)
       );
 
     toUnfollowUser.followers = toUnfollowUser.followers.filter(
-      (id) => id === currentUserId
+      (id) => id.toString() !== currentUserId
     );
     followingUser.following = followingUser.following.filter(
-      (id) => id === idToFollow
+      (id) => id.toString() !== idToUnfollow
     );
 
     await toUnfollowUser.save();
@@ -138,7 +140,7 @@ export const unFollowUser = async (req, res, next) => {
 
     return res
       .status(200)
-      .json({ status: true, message: 'User is unfollowed' });
+      .json({ status: true, message: 'User is unfollowed', idToUnfollow });
   } catch (error) {
     console.error(
       `Error: File: UserController, func: followUser, line: 145`,

@@ -16,6 +16,15 @@ import {
   UPDATE_PROFILE_INFO_SUCCESS,
 } from './ProfileModel/ProfileModelActionTypes';
 
+import {
+  FOLLOW_FAILED,
+  FOLLOW_START,
+  FOLLOW_SUCCESS,
+  UNFOLLOW_START,
+  UNFOLLOW_SUCCESS,
+  UNFOLLOW_FAILED,
+} from './Person/PersonActionTypes';
+
 const initialState = {
   authData: null,
   loadingAuth: false,
@@ -28,6 +37,8 @@ const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_START:
     case LOGOUT_START:
+    case FOLLOW_START:
+    case UNFOLLOW_START:
       return {
         ...state,
         loadingAuth: true,
@@ -84,10 +95,48 @@ const authReducer = (state = initialState, action) => {
         authData,
       };
 
+    case FOLLOW_SUCCESS:
+      const userFollow = {
+        ...state.authData.user,
+        following: [...state.authData.user.following, action.data.idToFollow],
+      };
+      return {
+        ...state,
+        loadingUserProfile: false,
+        error: null,
+        loadingAuth: false,
+        message: action.data.message,
+        authData: {
+          ...state.authData,
+          user: userFollow,
+        },
+      };
+
+    case UNFOLLOW_SUCCESS:
+      const userUnfollow = {
+        ...state.authData.user,
+        following: state.authData.user.following.filter(
+          (id) => id !== action.data.idToUnfollow
+        ),
+      };
+      return {
+        ...state,
+        loadingUserProfile: false,
+        error: null,
+        loadingAuth: false,
+        message: action.data.message,
+        authData: {
+          ...state.authData,
+          user: userUnfollow,
+        },
+      };
+
     case AUTH_FAILED:
     case LOGOUT_FAILED:
     case UPDATE_PROFILE_COVER_IMAGE_FAILED:
     case UPDATE_PROFILE_INFO_FAILED:
+    case FOLLOW_FAILED:
+    case UNFOLLOW_FAILED:
       return {
         ...state,
         loadingAuth: false,
