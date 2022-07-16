@@ -196,7 +196,7 @@ const ProfileModel = ({ modalOpened, setModalOpened, user }) => {
             />
           </div>
 
-          <button className='button infoButton' type='submit'>
+          <button className='button infoButton' type='submit' disabled>
             Update
           </button>
         </form>

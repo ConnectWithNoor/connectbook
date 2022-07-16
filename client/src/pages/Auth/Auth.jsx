@@ -213,6 +213,7 @@ const Login = memo(
             />
           </div>
           <span className='error-msg'>{error}</span>
+
           <div>
             <span
               className='auth-acc-already'
@@ -224,6 +225,11 @@ const Login = memo(
               Don't have an account. Register Now!
             </span>
           </div>
+          <article className='demo-details'>
+            <b>use demo account:</b>
+            <span>demo@connectwithnoor.com</span>
+            <span>12345678</span>
+          </article>
           <button className='button infoButton' disabled={loading}>
             {loading ? <UilSpinnerAlt className='loadingButton' /> : 'Log in'}
           </button>
