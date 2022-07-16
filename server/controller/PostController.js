@@ -8,6 +8,15 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 export const createPost = async (req, res, next) => {
   const userId = req.user._id.toString();
   const { description, image } = req.body;
+  const allowedExt = ['.jpeg', '.jpg', '.png'];
+
+  const validImg = allowedExt.includes(image);
+
+  if (!description || !validImg)
+    return new ErrorResponse(
+      'Not able to create a post, Plesse insert an image and a desc',
+      403
+    );
 
   const newPost = new PostModel({ userId, description, image });
 
@@ -46,6 +55,7 @@ export const getPostById = async (req, res, next) => {
 // update a post by id
 export const updatePostById = async (req, res, next) => {
   const { id: postId } = req.params;
+  const allowedOptions = ['description', 'image'];
   const updates = Object.keys(req.body);
   const userId = req.user._id.toString();
 
@@ -54,7 +64,12 @@ export const updatePostById = async (req, res, next) => {
     if (!post)
       return next(new ErrorResponse('No post found. Invalid post id', 404));
 
-    updates.forEach((update) => (post[update] = req.body[update]));
+    updates.forEach((update) => {
+      if (allowedOptions.includes(update)) {
+        post[update] = req.body[update];
+      }
+    });
+
     await post.save();
     return res.status(200).json({ status: true, message: 'Post is updated' });
   } catch (error) {

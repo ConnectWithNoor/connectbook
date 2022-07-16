@@ -1,4 +1,4 @@
-import { uploadImageApi, uploadPostApi } from '../../api/PostShareApi';
+import { uploadImageApi, createPostApi } from '../../api/PostShareApi';
 import {
   POST_SHARE_START,
   POST_SHARE_SUCCESS,
@@ -23,10 +23,10 @@ export const updateImageAction = (formData, controller) => async (dispatch) => {
   }
 };
 
-export const updatePostAction = (formData, controller) => async (dispatch) => {
+export const createPostAction = (formData, controller) => async (dispatch) => {
   try {
     dispatch({ type: POST_SHARE_START });
-    const { data } = await uploadPostApi(formData, controller);
+    const { data } = await createPostApi(formData, controller);
     dispatch({ type: POST_SHARE_SUCCESS, data });
   } catch (error) {
     dispatch({

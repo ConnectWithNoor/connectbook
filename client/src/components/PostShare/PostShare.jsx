@@ -13,7 +13,7 @@ import toast from 'react-hot-toast';
 import './PostShare.css';
 import {
   updateImageAction,
-  updatePostAction,
+  createPostAction,
 } from '../../state/PostShare/PostShareActions';
 import { SERVER_PUBLIC_IMAGE_FOLDER } from '../../constants/variables';
 
@@ -83,7 +83,7 @@ const PostShare = () => {
     newPost.image = fileName;
     try {
       dispatch(updateImageAction(data, controller));
-      dispatch(updatePostAction(newPost, controller));
+      dispatch(createPostAction(newPost, controller));
     } catch (error) {
       setErrorMsg('Problem occured in uploading post. Please try again');
       console.error(error);

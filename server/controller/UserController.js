@@ -24,12 +24,36 @@ export const getUserById = async (req, res, next) => {
 export const updateUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
+    const allowedOptions = [
+      'username',
+      'password',
+      'firstName',
+      'lastName',
+      'profilePicture',
+      'coverPicture',
+      'about',
+      'livesIn',
+      'worksAt',
+      'country',
+      'relationshipStatus',
+      'followers',
+      'following',
+    ];
 
-    if (userIdToChange === req.user._id.toString() || req.user.isAdmn) {
+    if (userIdToChange === req.user._id.toString() || req.user.isAdmin) {
       const updates = Object.keys(req.body);
       const user = await UserModel.findById(userIdToChange);
 
-      updates.forEach((update) => (user[update] = req.body[update]));
+      updates.forEach((update) => {
+        if (allowedOptions.includes(update)) {
+          user[update] = req.body[update];
+        }
+      });
+
+      // only one admin can make another admin
+      if (updates['isAdmin'] && req.user.isAdmin) {
+        user['isAdmin'] = req.body['isAdmin'];
+      }
 
       await user.save();
 

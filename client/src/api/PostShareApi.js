@@ -7,7 +7,7 @@ export const uploadImageApi = (data, controller) => {
   });
 };
 
-export const uploadPostApi = (data, controller) => {
+export const createPostApi = (data, controller) => {
   return AxiosAuthInterceptor.post(POST_CREATE, data, {
     signal: controller.signal,
   });
