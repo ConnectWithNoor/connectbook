@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { UilSpinnerAlt } from '@iconscout/react-unicons';
 import toast from 'react-hot-toast';
@@ -68,15 +69,20 @@ const PersonSingle = ({ person }) => {
   return (
     <div className='follower' key={person._id}>
       <div>
-        <img
-          src={`${SERVER_PUBLIC_IMAGE_FOLDER}${person.profilePicture}`}
-          alt='person-img'
-          className='followerImg'
-        />
+        <Link className='dispose-Link' to={`/profile/${person?._id}`}>
+          <img
+            src={`${SERVER_PUBLIC_IMAGE_FOLDER}${person.profilePicture}`}
+            alt='person-img'
+            className='followerImg'
+          />
+        </Link>
         <div className='name'>
           <span>
-            {person.firstName} {person.lastName}
+            <Link className='dispose-Link' to={`/profile/${person?._id}`}>
+              {person.firstName} {person.lastName}
+            </Link>
           </span>
+
           <span>@{person.username.split('@')[0]}</span>
         </div>
       </div>

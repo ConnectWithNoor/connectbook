@@ -151,7 +151,7 @@ export const getTimelinePosts = async (req, res, next) => {
     const userIdsArray = Array.from(userIdsSet);
 
     const allPosts = await PostModel.find({ userId: userIdsArray })
-      .populate('userId', 'username firstName lastName _id')
+      .populate('userId', 'username firstName lastName _id profilePicture')
       .sort({ createdAt: -1 });
 
     return res.status(200).json(allPosts);
