@@ -74,7 +74,10 @@ const Auth = () => {
       <div className='a-left'>
         <img src={require('../../img/logo.png')} alt='logo' />
         <div className='webName'>
-          <h1>ZKC Media</h1>
+          <div>
+            <h1>ConnectBook</h1>
+            <sub>by Noor Muhammad</sub>
+          </div>
           <h6>Explore the ideas throughout the world</h6>
         </div>
       </div>

@@ -23,8 +23,26 @@
   height: 4rem;
 }
 
-.webName > h1 {
+.webName > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.webName > div > h1 {
   font-size: 3rem;
+  background-image: var(--buttonBg);
+  margin-bottom: 1rem;
+  background-size: 100%;
+  background-repeat: repeat;
+  background-clip: text;
+  -moz-background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.webName > div > sub {
+  font-size: 1rem;
+  align-self: flex-end;
   background-image: var(--buttonBg);
   background-size: 100%;
   background-repeat: repeat;

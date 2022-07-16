@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 import { LikeUnlikePostAction } from '../../state/PostShare/PostFeed/PostFeedActions';
@@ -89,18 +88,14 @@ const Post = ({ data }) => {
 
       <div className='detail'>
         <span>
-          <Link className='dispose-Link' to={`/profile/${data?.userId?._id}`}>
-            <img
-              src={`${SERVER_PUBLIC_IMAGE_FOLDER}${data?.userId?.profilePicture}`}
-              alt='person-img'
-              className='followerImg'
-            />
-          </Link>
-          <Link className='dispose-Link' to={`/profile/${data?.userId?._id}`}>
-            <b>
-              {data?.userId?.firstName} {data?.userId?.lastName}
-            </b>
-          </Link>
+          <img
+            src={`${SERVER_PUBLIC_IMAGE_FOLDER}${data?.userId?.profilePicture}`}
+            alt='person-img'
+            className='followerImg'
+          />
+          <b>
+            {data?.userId?.firstName} {data?.userId?.lastName}
+          </b>
         </span>
 
         <span> {data.description}</span>

@@ -8,14 +8,14 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 export const createPost = async (req, res, next) => {
   const userId = req.user._id.toString();
   const { description, image } = req.body;
-  const allowedExt = ['.jpeg', '.jpg', '.png'];
-
-  const validImg = allowedExt.includes(image);
+  const validImg = image.match(/\.(jpg|jpeg|png)$/);
 
   if (!description || !validImg)
-    return new ErrorResponse(
-      'Not able to create a post, Plesse insert an image and a desc',
-      403
+    return next(
+      new ErrorResponse(
+        'Not able to create a post, Plesse insert an image and a desc',
+        403
+      )
     );
 
   const newPost = new PostModel({ userId, description, image });
@@ -120,6 +120,7 @@ export const likeOrDislikePostById = async (req, res, next) => {
       //   if post isn't liked by the user. Like it
       post.likes = post.likes.concat(userId);
       await post.save();
+      await post.populate('userId');
       return res
         .status(200)
         .json({ status: true, message: 'Post liked added', post });
@@ -127,6 +128,7 @@ export const likeOrDislikePostById = async (req, res, next) => {
       //   if post is already liked by the user. Unlike it
       post.likes = post.likes.filter((id) => id === userId);
       await post.save();
+      await post.populate('userId');
       return res
         .status(200)
         .json({ status: true, message: 'Post liked removed', post });

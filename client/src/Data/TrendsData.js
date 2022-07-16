@@ -1,7 +1,7 @@
 export const TrendData = [
   {
     id: 0,
-    name: 'Minions',
+    name: 'SmackDown',
     shares: 97,
   },
   {
@@ -11,7 +11,7 @@ export const TrendData = [
   },
   {
     id: 2,
-    name: 'Zainkeepscode',
+    name: 'Lewandowski',
     shares: 75.5,
   },
   {
@@ -21,12 +21,12 @@ export const TrendData = [
   },
   {
     id: 4,
-    name: 'Elon Musk',
+    name: 'Manchin',
     shares: 71.9,
   },
   {
     id: 5,
-    name: 'Need for Speed',
+    name: 'Happy Mondays',
     shares: 20,
   },
 ];
