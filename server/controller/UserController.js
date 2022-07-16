@@ -148,3 +148,20 @@ export const unFollowUser = async (req, res, next) => {
     return next(ErrorHandler(error, req, res, next));
   }
 };
+
+export const getAllUsers = async (req, res, next) => {
+  const userId = req.user._id;
+  try {
+    // get all users except the one called the function;
+    const users = await UserModel.find({ _id: { $nin: userId } });
+
+    return res.status(200).json(users);
+  } catch (error) {
+    console.error(
+      `Error: File: UserController, func: getAllUsers, line: 170`,
+      error
+    );
+
+    return next(ErrorHandler(error, req, res, next));
+  }
+};

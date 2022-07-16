@@ -32,7 +32,10 @@ const Post = ({ data }) => {
 
   useEffect(() => {
     setErrorMsg(error);
-    error && toast.error(error);
+    error &&
+      toast.error(error, {
+        id: 'post-component',
+      });
   }, [error]);
 
   useEffect(() => {

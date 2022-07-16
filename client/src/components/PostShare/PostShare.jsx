@@ -33,7 +33,10 @@ const PostShare = () => {
 
   useEffect(() => {
     setErrorMsg(error);
-    error && toast.error(error);
+    error &&
+      toast.error(error, {
+        id: 'profile-share-component',
+      });
   }, [error]);
 
   useEffect(() => {
@@ -90,11 +93,7 @@ const PostShare = () => {
   return (
     <div className='postShare'>
       <img
-        src={
-          user.profilePicture
-            ? `${SERVER_PUBLIC_IMAGE_FOLDER}${user.profilePicture}`
-            : `${SERVER_PUBLIC_IMAGE_FOLDER}profileImg.jpg`
-        }
+        src={`${SERVER_PUBLIC_IMAGE_FOLDER}${user.profilePicture}`}
         alt='profile-img'
       />
       <div className='inputDiv' onSubmit={handleShare}>

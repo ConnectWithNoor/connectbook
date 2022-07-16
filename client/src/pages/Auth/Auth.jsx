@@ -27,7 +27,10 @@ const Auth = () => {
 
   useEffect(() => {
     setErrorMsg(error);
-    error && toast.error(error);
+    error &&
+      toast.error(error, {
+        id: 'auth-component',
+      });
   }, [error]);
 
   useEffect(() => {

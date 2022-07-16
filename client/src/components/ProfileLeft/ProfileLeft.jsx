@@ -1,5 +1,5 @@
 import LogoSearch from '../LogoSearch/LogoSearch';
-import FollowersCard from '../FollowersCard/FollowersCard';
+import PersonCard from '../PersonCard/PersonCard';
 import InfoCard from '../InfoCard/InfoCard';
 import './ProfileLeft.css';
 
@@ -8,7 +8,7 @@ const ProfileLeft = () => {
     <div className='profileLeft'>
       <LogoSearch />
       <InfoCard />
-      <FollowersCard />
+      <PersonCard />
     </div>
   );
 };

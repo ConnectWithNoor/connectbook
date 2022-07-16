@@ -1,4 +1,4 @@
-import FollowersCard from '../FollowersCard/FollowersCard';
+import PersonCard from '../PersonCard/PersonCard';
 import LogoSearch from '../LogoSearch/LogoSearch';
 import ProfileCard from '../ProfileCard/ProfileCard';
 import './ProfileSide.css';
@@ -8,7 +8,7 @@ const ProfileSide = () => {
     <div className='profileSide'>
       <LogoSearch />
       <ProfileCard isProfilePage={false} />
-      <FollowersCard />
+      <PersonCard />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { LOGOUT_SUCCESS } from '../Auth/AuthActionTypes';
 import {
   GET_POST_TIMELINE_SUCCESS,
   GET_POST_TIMELINE_FAILED,
@@ -54,6 +55,11 @@ const postReducer = (state = initialState, action) => {
         loadingPosts: false,
         error: null,
         message: action?.data?.message,
+      };
+
+    case LOGOUT_SUCCESS:
+      return {
+        ...initialState,
       };
 
     case POST_SHARE_FAILED:

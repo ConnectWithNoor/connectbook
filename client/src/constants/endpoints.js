@@ -19,3 +19,4 @@ export const USER_UPDATE_BY_ID = '/user/'; //done
 export const USER_DELETE_BY_ID = '/user/';
 export const USER_FOLLOW_BY_ID = '/user/';
 export const USER_UNFOLLOW_BY_ID = '/user/';
+export const USER_GET_ALL = '/user/';

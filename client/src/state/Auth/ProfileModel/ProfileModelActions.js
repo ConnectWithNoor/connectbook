@@ -28,7 +28,6 @@ export const updateProfileCoverImageAction = (formData) => async (dispatch) => {
 
 export const updateProfileInfoAction =
   (userId, formData) => async (dispatch) => {
-    console.log('aa', formData);
     try {
       dispatch({ type: UPDATE_PROFILE_INFO_START });
       const { data } = await updateProfileInfoApi(userId, formData);

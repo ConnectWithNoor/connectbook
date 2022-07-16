@@ -22,19 +22,11 @@ const ProfileCard = ({ isProfilePage }) => {
     <div className='profileCard'>
       <div className='profileImages'>
         <img
-          src={
-            user.coverPicture
-              ? `${SERVER_PUBLIC_IMAGE_FOLDER}${user.coverPicture}`
-              : `${SERVER_PUBLIC_IMAGE_FOLDER}cover.jpg`
-          }
+          src={`${SERVER_PUBLIC_IMAGE_FOLDER}${user.coverPicture}`}
           alt='cover-img'
         />
         <img
-          src={
-            user.profilePicture
-              ? `${SERVER_PUBLIC_IMAGE_FOLDER}${user.profilePicture}`
-              : `${SERVER_PUBLIC_IMAGE_FOLDER}profileImg.jpg`
-          }
+          src={`${SERVER_PUBLIC_IMAGE_FOLDER}${user.profilePicture}`}
           alt='profile-img'
         />
       </div>
