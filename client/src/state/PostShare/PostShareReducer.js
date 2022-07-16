@@ -75,7 +75,7 @@ const postReducer = (state = initialState, action) => {
       return {
         ...state,
         loadingPosts: false,
-        error: action.error,
+        error: action.error || null,
         message: null,
       };
 

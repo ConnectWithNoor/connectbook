@@ -41,6 +41,7 @@ const Post = ({ data }) => {
   useEffect(() => {
     message &&
       !message.includes('image') &&
+      !message.includes('user') &&
       toast.success(message, {
         id: 'post-component',
       });

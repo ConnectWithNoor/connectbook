@@ -6,6 +6,7 @@ import {
   UNFOLLOW_START,
   UNFOLLOW_SUCCESS,
   UNFOLLOW_FAILED,
+  SET_MESSAGE_NULL,
 } from './PersonActionTypes';
 
 export const followPersonAction = (userId) => async (dispatch) => {
@@ -14,6 +15,9 @@ export const followPersonAction = (userId) => async (dispatch) => {
     const { data } = await followPersonApi(userId);
 
     dispatch({ type: FOLLOW_SUCCESS, data });
+    setTimeout(() => {
+      dispatch({ type: SET_MESSAGE_NULL });
+    }, 2000);
   } catch (error) {
     dispatch({ type: FOLLOW_FAILED, error: error?.response?.data?.message });
     console.error(error);
@@ -26,6 +30,9 @@ export const unfollowPersonAction = (userId) => async (dispatch) => {
     const { data } = await unfollowPersonApi(userId);
 
     dispatch({ type: UNFOLLOW_SUCCESS, data });
+    setTimeout(() => {
+      dispatch({ type: SET_MESSAGE_NULL });
+    }, 2000);
   } catch (error) {
     dispatch({
       type: UNFOLLOW_FAILED,

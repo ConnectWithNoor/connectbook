@@ -23,6 +23,7 @@ import {
   UNFOLLOW_START,
   UNFOLLOW_SUCCESS,
   UNFOLLOW_FAILED,
+  SET_MESSAGE_NULL,
 } from './Person/PersonActionTypes';
 
 const initialState = {
@@ -129,6 +130,12 @@ const authReducer = (state = initialState, action) => {
           ...state.authData,
           user: userUnfollow,
         },
+      };
+
+    case SET_MESSAGE_NULL:
+      return {
+        ...state,
+        message: null,
       };
 
     case AUTH_FAILED:

@@ -16,7 +16,7 @@ const PersonCard = () => {
         const { data } = await getAllPersonsApi(controller);
         setPerson(data);
       } catch (error) {
-        error &&
+        error?.response?.data?.message &&
           toast.error(error?.response?.data?.message, {
             id: 'person-card-component',
           });

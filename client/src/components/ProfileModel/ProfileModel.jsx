@@ -42,6 +42,7 @@ const ProfileModel = ({ modalOpened, setModalOpened, user }) => {
 
   useEffect(() => {
     message &&
+      !message.includes('User') &&
       toast.success(message, {
         id: 'profile-component-success',
       });

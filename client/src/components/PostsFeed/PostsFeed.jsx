@@ -26,7 +26,8 @@ const PostsFeed = () => {
 
   return (
     <div className='postsFeed'>
-      <span className='error-msg'>{errorMsg}</span>
+      {errorMsg && <span className='error-msg'>{errorMsg}</span>}
+
       {!loadingImage &&
         posts.map((post, id) => {
           return <Post key={id} data={post} />;
