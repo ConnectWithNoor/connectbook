@@ -2,12 +2,15 @@ import express from 'express';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 import AuthRoute from './route/AuthRoute.js';
 import UserRoute from './route/UserRoute.js';
 import PostRoute from './route/PostRoute.js';
 import MediaRoute from './route/MediaRoute.js';
 import { ErrorHandler } from './middleware/errorHandler.js';
+
+import corsConfig from './config/corsConfig.js';
 
 // variables and config
 dotenv.config();
@@ -29,11 +32,9 @@ app.use(
   })
 );
 
-app.use(
-  cors({
-    origin: 'http://localhost:3000',
-  })
-);
+app.use(cors(corsConfig));
+
+app.use(cookieParser());
 
 // middleware to server images
 app.use(express.static('public'));

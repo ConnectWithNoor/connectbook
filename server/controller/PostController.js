@@ -108,7 +108,7 @@ export const deletePostById = async (req, res, next) => {
 // like/dislike a post by Id
 export const likeOrDislikePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const userId = req.user._id.toString();
+  const userId = req.user;
 
   try {
     const post = await PostModel.findById(postId);

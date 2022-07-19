@@ -84,16 +84,10 @@ const UserSchema = new mongoose.Schema(
         ref: 'user',
       },
     ],
-    tokens: [
+    refreshTokens: [
       {
-        accessToken: {
-          type: String,
-          required: true,
-        },
-        refreshToken: {
-          type: String,
-          required: true,
-        },
+        type: String,
+        required: true,
       },
     ],
   },
@@ -109,7 +103,7 @@ UserSchema.methods.toJSON = function () {
   const userObj = user.toObject();
 
   delete userObj.password;
-  delete userObj.tokens;
+  delete userObj.refreshTokens;
   delete userObj.isAdmin;
   delete userObj.createdAt;
   delete userObj.updatedAt;
