@@ -37,10 +37,6 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    isAdmin: {
-      type: Boolean,
-      default: false,
-    },
     profilePicture: {
       type: String,
       default: 'profileImg.jpg',
@@ -70,26 +66,22 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: 'relationshipStatus',
     },
-    followers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        default: [],
-        ref: 'user',
-      },
-    ],
-    following: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        default: [],
-        ref: 'user',
-      },
-    ],
-    refreshTokens: [
-      {
-        type: String,
-        required: true,
-      },
-    ],
+    followers: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+      default: [],
+    },
+    following: {
+      type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }],
+      default: [],
+    },
+    roles: {
+      type: [{ type: Number, enum: [2001, 5150] }],
+      default: 2001,
+    },
+    refreshTokens: {
+      type: [{ type: String }],
+      required: true,
+    },
   },
   { timestamps: true }
 );
@@ -104,7 +96,7 @@ UserSchema.methods.toJSON = function () {
 
   delete userObj.password;
   delete userObj.refreshTokens;
-  delete userObj.isAdmin;
+  delete userObj.roles;
   delete userObj.createdAt;
   delete userObj.updatedAt;
   delete userObj.__v;
@@ -137,10 +129,10 @@ UserSchema.statics.findByCredentials = async (username, password) => {
   return user;
 };
 
-UserSchema.methods.generateAccessToken = async function () {
+UserSchema.methods.generateAccessToken = async function (roles) {
   const user = this;
   const token = await jwt.sign(
-    { _id: user._id.toString() },
+    { userInfo: { _id: user._id.toString(), roles } },
     process.env.JWT_ACCESS_SECRET,
     {
       expiresIn: process.env.JWT_ACCESS_EXPIRE,
@@ -161,6 +153,6 @@ UserSchema.methods.generateRefreshToken = async function () {
   return token;
 };
 
-const userModel = mongoose.model('user', UserSchema);
+const userModel = mongoose.model('User', UserSchema);
 
 export default userModel;

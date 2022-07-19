@@ -45,7 +45,9 @@ export const loginUser = async (req, res, next) => {
       req.body.password
     );
 
-    const accessToken = await user.generateAccessToken();
+    const roles = Object.values(user.roles);
+
+    const accessToken = await user.generateAccessToken(roles);
     const refreshToken = await user.generateRefreshToken();
 
     user.refreshTokens = user.refreshTokens.concat(refreshToken);
@@ -141,7 +143,9 @@ export const refreshAccessToken = async (req, res, next) => {
         return next(new ErrorResponse('Please use a valid refresh token', 403)); //Forbidden
       }
 
-      const accessToken = await user.generateAccessToken();
+      const roles = Object.values(user.roles);
+
+      const accessToken = await user.generateAccessToken(roles);
 
       return res.status(200).json({ accessToken });
     }

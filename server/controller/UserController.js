@@ -1,6 +1,7 @@
 import { ErrorHandler } from '../middleware/errorHandler.js';
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
+import { ROLES_LIST } from '../utils/RolesList.js';
 
 // get a user by id;
 export const getUserById = async (req, res, next) => {
@@ -24,6 +25,7 @@ export const getUserById = async (req, res, next) => {
 export const updateUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
+    const isAdmin = req.roles.includes(ROLES_LIST.admin);
     const allowedOptions = [
       'username',
       'password',
@@ -40,9 +42,11 @@ export const updateUserById = async (req, res, next) => {
       'following',
     ];
 
-    if (userIdToChange === req.user._id.toString() || req.user.isAdmin) {
+    if (userIdToChange === req.user._id.toString() || isAdmin) {
       const updates = Object.keys(req.body);
       const user = await UserModel.findById(userIdToChange);
+
+      if (!user) return next(new ErrorResponse('No user found', 404));
 
       updates.forEach((update) => {
         if (allowedOptions.includes(update)) {
@@ -50,9 +54,9 @@ export const updateUserById = async (req, res, next) => {
         }
       });
 
-      // only one admin can make another admin
-      if (updates['isAdmin'] && req.user.isAdmin) {
-        user['isAdmin'] = req.body['isAdmin'];
+      // only admin can change roles of other users
+      if (isAdmin && req.body['roles']) {
+        user.roles.push(req.body['roles']);
       }
 
       await user.save();
@@ -76,8 +80,9 @@ export const updateUserById = async (req, res, next) => {
 export const deleteUserById = async (req, res, next) => {
   try {
     const { id: userIdToChange } = req.params;
+    const isAdmin = req.roles.includes(ROLES_LIST.admin);
 
-    if (userIdToChange === req.user._id.toString() || req.user.isAdmn) {
+    if (userIdToChange === req.user._id.toString() || isAdmin) {
       const user = await UserModel.findById(userIdToChange);
       await user.remove();
       return res

@@ -21,12 +21,13 @@ export const authMiddleware = async (req, res, next) => {
         if (err)
           return next(new ErrorResponse('Please use a valid auth token', 403)); //Forbidden
 
-        const user = await UserModel.findById(decodedToken._id);
+        const user = await UserModel.findById(decodedToken.userInfo._id);
 
         if (!user)
           return next(new ErrorResponse('Please use a valid auth token', 403)); //Forbidden
 
         req.user = user;
+        req.roles = user.roles;
         next();
       }
     );
