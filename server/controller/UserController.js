@@ -90,7 +90,7 @@ export const deleteUserById = async (req, res, next) => {
     }
   } catch (error) {
     console.error(
-      `Error: File: UserController, func: deleteUserById, line: 70`,
+      `Error: File: UserController, func: deleteUserById, line: 93`,
       error
     );
     return next(ErrorHandler(error, req, res, next));
@@ -108,11 +108,11 @@ export const followUser = async (req, res, next) => {
     }
 
     const TofollowUser = await UserModel.findById(idToFollow);
-    const followingUser = await UserModel.findById(currentUserId);
+    const followingUser = req.user;
 
     // if the user is already following that user
     if (followingUser.following.includes(idToFollow))
-      return next(new ErrorResponse('You are already following the user', 400));
+      return next(new ErrorResponse('You are already following the user', 401));
 
     TofollowUser.followers = TofollowUser.followers.concat(currentUserId);
     followingUser.following = followingUser.following.concat(idToFollow);
@@ -144,12 +144,12 @@ export const unFollowUser = async (req, res, next) => {
     }
 
     const toUnfollowUser = await UserModel.findById(idToUnfollow);
-    const followingUser = await UserModel.findById(currentUserId);
+    const followingUser = req.user;
 
     // if the user is already not following that user
     if (!followingUser.following.includes(idToUnfollow))
       return next(
-        new ErrorResponse('You are already not following the user', 400)
+        new ErrorResponse('You are already not following the user', 401)
       );
 
     toUnfollowUser.followers = toUnfollowUser.followers.filter(
@@ -167,7 +167,7 @@ export const unFollowUser = async (req, res, next) => {
       .json({ status: true, message: 'User is unfollowed', idToUnfollow });
   } catch (error) {
     console.error(
-      `Error: File: UserController, func: followUser, line: 145`,
+      `Error: File: UserController, func: followUser, line: 170`,
       error
     );
 

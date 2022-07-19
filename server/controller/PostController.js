@@ -1,7 +1,5 @@
-// import mongoose from 'mongoose';
 import { ErrorHandler } from '../middleware/errorHandler.js';
 import PostModel from '../model/PostModel.js';
-// import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 // create new Post
@@ -14,7 +12,7 @@ export const createPost = async (req, res, next) => {
     return next(
       new ErrorResponse(
         'Not able to create a post, Plesse insert an image and a desc',
-        403
+        400
       )
     );
 
@@ -23,7 +21,7 @@ export const createPost = async (req, res, next) => {
   try {
     await newPost.save();
     await newPost.populate('userId');
-    res.status(200).json([newPost]);
+    res.status(201).json([newPost]);
   } catch (error) {
     console.error(
       `Error: File: PostController, func: createPost, line: 18`,
@@ -98,7 +96,7 @@ export const deletePostById = async (req, res, next) => {
       .json({ status: true, message: 'Post deleted successfully' });
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: deletePostById, line: 85`,
+      `Error: File: PostController, func: deletePostById, line: 101`,
       error
     );
     return next(ErrorHandler(error, req, res, next));
@@ -108,13 +106,13 @@ export const deletePostById = async (req, res, next) => {
 // like/dislike a post by Id
 export const likeOrDislikePostById = async (req, res, next) => {
   const { id: postId } = req.params;
-  const userId = req.user;
+  const userId = req.user._id.toString();
 
   try {
     const post = await PostModel.findById(postId);
 
     if (!post)
-      return next(new ErrorResponse('Not post found. Invalid post id', 401));
+      return next(new ErrorResponse('Not post found. Invalid post id', 404));
 
     if (!post.likes.includes(userId)) {
       //   if post isn't liked by the user. Like it
@@ -122,7 +120,7 @@ export const likeOrDislikePostById = async (req, res, next) => {
       await post.save();
       await post.populate('userId');
       return res
-        .status(200)
+        .status(201)
         .json({ status: true, message: 'Post liked added', post });
     } else {
       //   if post is already liked by the user. Unlike it
@@ -130,12 +128,12 @@ export const likeOrDislikePostById = async (req, res, next) => {
       await post.save();
       await post.populate('userId');
       return res
-        .status(200)
+        .status(201)
         .json({ status: true, message: 'Post liked removed', post });
     }
   } catch (error) {
     console.error(
-      `Error: File: PostController, func: likeOrDislikePostById, line: 120`,
+      `Error: File: PostController, func: likeOrDislikePostById, line: 138`,
       error
     );
     return next(ErrorHandler(error, req, res, next));
@@ -145,9 +143,10 @@ export const likeOrDislikePostById = async (req, res, next) => {
 // get timelime posts
 export const getTimelinePosts = async (req, res, next) => {
   const user = req.user;
+
   try {
     const userIdsSet = new Set([]);
-    userIdsSet.add(user.id);
+    userIdsSet.add(user._id.toString());
 
     user.following.forEach((id) => userIdsSet.add(id.toString()));
     const userIdsArray = Array.from(userIdsSet);

@@ -2,7 +2,6 @@ const ALLOWED_ORIGINS = ['http://localhost:3000'];
 
 const corsConfig = {
   origin: (origin, callback) => {
-    console.log('origin', origin);
     if (ALLOWED_ORIGINS.includes(origin) || !origin) {
       callback(null, true);
     } else {

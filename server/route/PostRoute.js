@@ -1,5 +1,4 @@
 import express from 'express';
-import { uploadMulter } from '../config/multer.js';
 import {
   createPost,
   deletePostById,

@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   '/image/upload',
-  // authMiddleware,
+  authMiddleware,
   uploadMulter.single('file'),
   uploadImage
 );
