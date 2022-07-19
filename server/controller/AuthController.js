@@ -119,53 +119,6 @@ export const logout = async (req, res, next) => {
   }
 };
 
-// export const refreshAccessToken = async (req, res, next) => {
-//   const { refreshToken } = req.body;
-//   // const {refreshToken, accessToken} = req.tokens;
-//   try {
-//     if (!refreshToken)
-//       return next(new ErrorResponse('You are not authenticated', 401));
-
-//     const decodedRefreshToken = jwt.verify(
-//       refreshToken,
-//       process.env.JWT_REFRESH_SECRET
-//     );
-
-//     const user = await UserModel.findOne({
-//       _id: decodedRefreshToken._id,
-//       'tokens.refreshToken': refreshToken,
-//     });
-
-//     if (!user) {
-//       return next(new ErrorResponse('Please use a valid refresh token', 403));
-//     }
-
-//     user.tokens = user.tokens.filter(
-//       (token) => token.refreshToken !== refreshToken
-//     );
-
-//     const newAccessToken = await user.generateAccessToken();
-//     const newRefreshToken = await user.generateRefreshToken();
-
-//     user.tokens = user.tokens.concat({
-//       accessToken: newAccessToken,
-//       refreshToken: newRefreshToken,
-//     });
-
-//     await user.save();
-
-//     // return res.status(200).json({refreshTokens: newRefreshToken, accessToken: newAccessToken})
-//     return res.status(200).json({ accessToken: newAccessToken });
-//   } catch (error) {
-//     console.error(
-//       `Error: File: AuthController, func: refreshAccessToken, line: 113`,
-//       error
-//     );
-
-//     return next(ErrorHandler(error, req, res, next));
-//   }
-// };
-
 export const refreshAccessToken = async (req, res, next) => {
   const cookies = req.cookies;
   const refreshToken = cookies?.jwt || undefined;
