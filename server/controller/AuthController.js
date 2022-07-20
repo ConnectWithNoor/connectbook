@@ -3,6 +3,9 @@ import { ErrorHandler } from '../middleware/errorHandler.js';
 
 import UserModel from '../model/UserModel.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
+import { clearCookies, setCookies } from '../utils/cookies.js';
+
+const ALLOWED_NO_OF_DEVICES = 2;
 
 export const registerUser = async (req, res, next) => {
   try {
@@ -45,20 +48,24 @@ export const loginUser = async (req, res, next) => {
       req.body.password
     );
 
+    const oldRefreshToken = req.cookies?.jwt || null;
+    if (oldRefreshToken) {
+      clearCookies(res);
+      user.revokeRefreshToken(oldRefreshToken);
+    }
+
+    if (user.refreshTokens.length >= ALLOWED_NO_OF_DEVICES) {
+      return next(
+        new ErrorResponse('You are already logged in. Please logout first', 400)
+      );
+    }
+
     const roles = Object.values(user.roles);
 
     const accessToken = await user.generateAccessToken(roles);
     const refreshToken = await user.generateRefreshToken();
 
-    user.refreshTokens = user.refreshTokens.concat(refreshToken);
-
-    await user.save();
-
-    res.cookie('jwt', refreshToken, {
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000,
-      secure: true,
-    });
+    setCookies(res, refreshToken);
     return res.status(200).json({ accessToken });
   } catch (error) {
     console.error(
@@ -73,7 +80,7 @@ export const logout = async (req, res, next) => {
   // onClient, also delete the access Token
   const cookies = req.cookies;
   const refreshToken = cookies?.jwt || undefined;
-  if (!refreshToken) next(new ErrorResponse('', 204)); // No content;
+  if (!refreshToken) return next(new ErrorResponse('', 204)); // No content;
 
   try {
     jwt.verify(
@@ -81,10 +88,7 @@ export const logout = async (req, res, next) => {
       process.env.JWT_REFRESH_SECRET,
       async (err, decordedToken) => {
         if (err) {
-          res.clearCookie('jwt', {
-            httpOnly: true,
-            secure: true,
-          });
+          clearCookies(res);
           return next(new ErrorResponse('', 204)); //Forbidden
         }
 
@@ -94,23 +98,12 @@ export const logout = async (req, res, next) => {
         });
 
         if (!user) {
-          res.clearCookie('jwt', {
-            httpOnly: true,
-            secure: true,
-          });
+          clearCookies(res);
           return next(new ErrorResponse('', 204)); //Forbidden
         }
 
-        user.refreshTokens = user.refreshTokens.filter(
-          (token) => token !== refreshToken
-        );
-
-        await user.save();
-
-        res.clearCookie('jwt', {
-          httpOnly: true,
-          secure: true,
-        });
+        user.revokeRefreshToken(refreshToken);
+        clearCookies(res);
 
         return res.status(204).send('');
       }
@@ -125,14 +118,16 @@ export const refreshAccessToken = async (req, res, next) => {
   const cookies = req.cookies;
   const refreshToken = cookies?.jwt || undefined;
   if (!refreshToken)
-    next(new ErrorResponse('Please use a valid auth token', 401));
+    return next(new ErrorResponse('Please use a valid auth token', 401));
 
   jwt.verify(
     refreshToken,
     process.env.JWT_REFRESH_SECRET,
     async (err, decordedToken) => {
-      if (err)
+      if (err) {
+        clearCookies(res);
         return next(new ErrorResponse('Please use a valid auth token', 403)); //Forbidden
+      }
 
       const user = await UserModel.findOne({
         _id: decordedToken._id,
@@ -140,14 +135,20 @@ export const refreshAccessToken = async (req, res, next) => {
       });
 
       if (!user) {
+        clearCookies(res);
         return next(new ErrorResponse('Please use a valid refresh token', 403)); //Forbidden
       }
+
+      await user.revokeRefreshToken(refreshToken);
+      clearCookies(res);
 
       const roles = Object.values(user.roles);
 
       const accessToken = await user.generateAccessToken(roles);
+      const newRefreshToken = await user.generateRefreshToken();
+      setCookies(res, newRefreshToken);
 
-      return res.status(200).json({ accessToken });
+      return res.status(200).json({ accessToken, roles });
     }
   );
 };

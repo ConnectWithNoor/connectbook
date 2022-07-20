@@ -56,7 +56,7 @@ export const updateUserById = async (req, res, next) => {
 
       // only admin can change roles of other users
       if (isAdmin && req.body['roles']) {
-        user.roles.push(req.body['roles']);
+        user.roles = user.roles.concat(req.body['roles']);
       }
 
       await user.save();
@@ -89,7 +89,7 @@ export const deleteUserById = async (req, res, next) => {
         .status(200)
         .json({ status: true, message: 'User Deleted Successfully' });
     } else {
-      next(
+      return next(
         new ErrorResponse('You are not allowed to perfrom this action', 401)
       );
     }

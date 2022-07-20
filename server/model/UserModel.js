@@ -150,7 +150,20 @@ UserSchema.methods.generateRefreshToken = async function () {
       expiresIn: process.env.JWT_REFRESH_EXPIRE,
     }
   );
+
+  user.refreshTokens = user.refreshTokens.concat(token);
+  await user.save();
+
   return token;
+};
+
+UserSchema.methods.revokeRefreshToken = async function (refreshToken) {
+  const user = this;
+  user.refreshTokens = user.refreshTokens.filter(
+    (token) => token !== refreshToken
+  );
+  await user.save();
+  return;
 };
 
 const userModel = mongoose.model('User', UserSchema);
