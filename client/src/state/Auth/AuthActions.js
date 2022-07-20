@@ -1,5 +1,5 @@
 import {
-  generateRefreshToken,
+  generateRefreshTokenApi,
   loginUserApi,
   logoutUserApi,
   registerUserApi,
@@ -21,6 +21,7 @@ export const loginUserAction = (formData, controller) => async (dispatch) => {
     const { data } = await loginUserApi(formData, controller);
 
     AxiosAuthInstance.interceptors.request.use((config) => {
+        console.log('req.inst')
             if(!config.headers['Authorization']) {
                 config.headers['Authorization'] = `Bearer ${data.accessToken}`
             }
@@ -29,12 +30,12 @@ export const loginUserAction = (formData, controller) => async (dispatch) => {
 
         AxiosAuthInstance.interceptors.response.use((response) => response, async (error) => {
             const prevReq = error?.config;
-
             if(error?.response?.status === 403 && !prevReq.sent) {
+              console.log('res.inst')
                 prevReq.sent = true;
-                const {accessToken: newAccessToken} = await generateRefreshToken();
+                const {data: {accessToken: newAccessToken}} = await generateRefreshTokenApi();
                 prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`
-                return AxiosAuthInstance(newAccessToken)
+                return AxiosAuthInstance(prevReq)
             }
             return Promise.reject(error)
         })

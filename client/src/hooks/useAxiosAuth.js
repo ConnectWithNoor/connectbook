@@ -23,14 +23,14 @@ const useAxiosAuth = () => {
                 prevReq.sent = true;
                 const {accessToken: newAccessToken} = await refresh();
                 prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`
-                return AxiosAuthInstance(newAccessToken)
+                return AxiosAuthInstance(prevReq)
             }
             return Promise.reject(error)
         })
 
         return () => {
-            AxiosAuthInstance.request.eject(request)
-            AxiosAuthInstance.response.eject(response)
+            AxiosAuthInstance.interceptors.request.eject(request)
+            AxiosAuthInstance.interceptors.response.eject(response)
         }
     }, [accessToken, refresh])
 

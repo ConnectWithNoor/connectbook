@@ -94,7 +94,6 @@ export const logout = async (req, res, next) => {
         }
 
         const user = await UserModel.findOne({
-          _id: decordedToken._id,
           refreshToken,
         });
 
@@ -125,15 +124,18 @@ export const refreshAccessToken = async (req, res, next) => {
     refreshToken,
     process.env.JWT_REFRESH_SECRET,
     async (err, decordedToken) => {
+
+    const user = await UserModel.findOne({
+      refreshToken,
+    });
+
       if (err) {
+        console.log('err', err)
+        await user.revokeRefreshToken(refreshToken);
         clearCookies(res);
         return next(new ErrorResponse('Please use a valid auth token', 403)); //Forbidden
       }
 
-      const user = await UserModel.findOne({
-        _id: decordedToken._id,
-        refreshToken,
-      });
 
       if (!user) {
         clearCookies(res);

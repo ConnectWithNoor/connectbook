@@ -19,6 +19,6 @@ export const logoutUserApi = (controller) => {
   });
 };
 
-export const generateRefreshToken = () => {
+export const generateRefreshTokenApi = () => {
   return AxiosAuthInstance.get(AUTH_NEW_REFRESH_TOKEN);
 }

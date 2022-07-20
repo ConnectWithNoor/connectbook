@@ -8,7 +8,7 @@ import {
   registerUserAction,
 } from '../../state/Auth/AuthActions';
 import './Auth.css';
-import useRefreshToken from '../../hooks/useRefreshToken';
+// import useRefreshToken from '../../hooks/useRefreshToken';
 
 const initialState = {
   firstName: '',
