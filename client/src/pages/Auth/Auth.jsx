@@ -26,7 +26,6 @@ const Auth = () => {
   const [errorMsg, setErrorMsg] = useState(null);
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     setErrorMsg(error);
     error &&
@@ -58,7 +57,6 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg(null);
-
 
     if (isLogin) {
       dispatch(loginUserAction(data, controller));
@@ -190,7 +188,6 @@ const Signup = memo(
 
 const Login = memo(
   ({ setIsLogin, handleChange, resetForm, error, handleSubmit, loading }) => {
-    
     return (
       <div className='a-right'>
         <form className='infoForm authForm' onSubmit={handleSubmit}>

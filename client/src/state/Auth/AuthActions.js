@@ -1,10 +1,8 @@
 import {
-  generateRefreshTokenApi,
   loginUserApi,
   logoutUserApi,
   registerUserApi,
 } from '../../api/AuthApi';
-import { AxiosAuthInstance } from '../../axios/interceptors';
 
 import {
   AUTH_FAILED,
@@ -19,24 +17,6 @@ export const loginUserAction = (formData, controller) => async (dispatch) => {
   try {
     dispatch({ type: AUTH_START });
     const { data } = await loginUserApi(formData, controller);
-
-    AxiosAuthInstance.interceptors.request.use((config) => {
-            if(!config.headers['Authorization']) {
-                config.headers['Authorization'] = `Bearer ${data.accessToken}`
-            }
-            return config
-        }, (error) => Promise.reject(error))
-
-        AxiosAuthInstance.interceptors.response.use((response) => response, async (error) => {
-            const prevReq = error?.config;
-            if(error?.response?.status === 403 && !prevReq.sent) {
-                prevReq.sent = true;
-                const {data: {accessToken: newAccessToken}} = await generateRefreshTokenApi();
-                prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`
-                return AxiosAuthInstance(prevReq)
-            }
-            return Promise.reject(error)
-        })
 
     dispatch({ type: AUTH_SUCCESS, data });
   } catch (error) {

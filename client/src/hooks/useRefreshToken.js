@@ -1,16 +1,15 @@
-import { generateRefreshToken } from '../api/AuthApi'
+import { generateRefreshTokenApi } from '../api/AuthApi';
 
 const useRefreshToken = () => {
   const refresh = async () => {
-    const {data} = await generateRefreshToken()
+    const { data } = await generateRefreshTokenApi();
 
     // set accessToken in redux;
 
+    return data.accessToken;
+  };
 
-    return data.accessToken
-  }
+  return refresh;
+};
 
-  return refresh
-}
-
-export default useRefreshToken
+export default useRefreshToken;

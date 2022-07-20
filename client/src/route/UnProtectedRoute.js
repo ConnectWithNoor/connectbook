@@ -6,7 +6,7 @@ const UnprotectedRoute = ({ children }) => {
   const { authData } = useSelector((state) => state.authReducer);
   if (!authData) return children;
 
-  return <Navigate to='/home' state={{from: location}}  replace/>;
+  return <Navigate to='/home' state={{ from: location }} replace />;
 };
 
 export default UnprotectedRoute;
