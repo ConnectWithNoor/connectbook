@@ -1,9 +1,11 @@
 import {
+  generateRefreshToken,
   loginUserApi,
   logoutUserApi,
   registerUserApi,
 } from '../../api/AuthApi';
-import { AxiosAuthInterceptor } from '../../axios/interceptors';
+import { AxiosAuthInstance } from '../../axios/interceptors';
+
 import {
   AUTH_FAILED,
   AUTH_START,
@@ -18,9 +20,24 @@ export const loginUserAction = (formData, controller) => async (dispatch) => {
     dispatch({ type: AUTH_START });
     const { data } = await loginUserApi(formData, controller);
 
-    AxiosAuthInterceptor.defaults.headers = {
-      Authorization: `Bearer ${data.accessToken}`,
-    };
+    AxiosAuthInstance.interceptors.request.use((config) => {
+            if(!config.headers['Authorization']) {
+                config.headers['Authorization'] = `Bearer ${data.accessToken}`
+            }
+            return config
+        }, (error) => Promise.reject(error))
+
+        AxiosAuthInstance.interceptors.response.use((response) => response, async (error) => {
+            const prevReq = error?.config;
+
+            if(error?.response?.status === 403 && !prevReq.sent) {
+                prevReq.sent = true;
+                const {accessToken: newAccessToken} = await generateRefreshToken();
+                prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`
+                return AxiosAuthInstance(newAccessToken)
+            }
+            return Promise.reject(error)
+        })
 
     dispatch({ type: AUTH_SUCCESS, data });
   } catch (error) {
@@ -34,10 +51,6 @@ export const registerUserAction =
     try {
       dispatch({ type: AUTH_START });
       const { data } = await registerUserApi(formData, controller);
-
-      AxiosAuthInterceptor.defaults.headers = {
-        Authorization: `Bearer ${data.accessToken}`,
-      };
 
       dispatch({ type: AUTH_SUCCESS, data });
     } catch (error) {

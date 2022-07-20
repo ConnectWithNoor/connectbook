@@ -6,7 +6,7 @@ import ProfileModel from '../ProfileModel/ProfileModel';
 
 import './InfoCard.css';
 import { useEffect } from 'react';
-import { getUserByIdApi } from '../../api/InfoCardApi';
+import { getPersonByIdApi } from '../../api/PersonsApi';
 import { logoutUserAction } from '../../state/Auth/AuthActions';
 
 const InfoCard = () => {
@@ -24,7 +24,7 @@ const InfoCard = () => {
   const fetchUser = async () => {
     if (params.id === user._id) return setProfileUser(user);
     else {
-      const profileUser = await getUserByIdApi(
+      const profileUser = await getPersonByIdApi(
         params.id,
         controllerRef.current
       );

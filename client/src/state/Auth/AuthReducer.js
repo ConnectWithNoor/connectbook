@@ -58,7 +58,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case AUTH_SUCCESS:
-      localStorage.setItem('profile', JSON.stringify(action.data));
+      // localStorage.setItem('profile', JSON.stringify(action.data));
       return {
         ...state,
         authData: action.data,
@@ -69,7 +69,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case LOGOUT_SUCCESS:
-      localStorage.clear();
+      // localStorage.clear();
       return {
         ...initialState,
       };

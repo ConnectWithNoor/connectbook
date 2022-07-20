@@ -8,6 +8,7 @@ import {
   registerUserAction,
 } from '../../state/Auth/AuthActions';
 import './Auth.css';
+import useRefreshToken from '../../hooks/useRefreshToken';
 
 const initialState = {
   firstName: '',
@@ -24,6 +25,7 @@ const Auth = () => {
   const [data, setData] = useState(initialState);
   const [errorMsg, setErrorMsg] = useState(null);
   const dispatch = useDispatch();
+
 
   useEffect(() => {
     setErrorMsg(error);
@@ -56,6 +58,7 @@ const Auth = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setErrorMsg(null);
+
 
     if (isLogin) {
       dispatch(loginUserAction(data, controller));
@@ -187,6 +190,7 @@ const Signup = memo(
 
 const Login = memo(
   ({ setIsLogin, handleChange, resetForm, error, handleSubmit, loading }) => {
+    
     return (
       <div className='a-right'>
         <form className='infoForm authForm' onSubmit={handleSubmit}>
