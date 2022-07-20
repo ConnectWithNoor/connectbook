@@ -11,6 +11,7 @@ import MediaRoute from './route/MediaRoute.js';
 import { ErrorHandler } from './middleware/errorHandler.js';
 
 import corsConfig from './config/corsConfig.js';
+import { credentialsMiddleware } from './middleware/credentialsMiddleware.js';
 
 // variables and config
 dotenv.config();
@@ -18,6 +19,8 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // middleware;
+app.use(cookieParser());
+
 app.use(
   express.json({
     limit: '30mb',
@@ -32,9 +35,11 @@ app.use(
   })
 );
 
+// do credentialsMiddleware before CORS
+app.use(credentialsMiddleware)
+
 app.use(cors(corsConfig));
 
-app.use(cookieParser());
 
 // middleware to server images
 app.use(express.static('public'));

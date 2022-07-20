@@ -51,7 +51,7 @@ export const loginUser = async (req, res, next) => {
     const oldRefreshToken = req.cookies?.jwt || null;
     if (oldRefreshToken) {
       clearCookies(res);
-      user.revokeRefreshToken(oldRefreshToken);
+      await user.revokeRefreshToken(oldRefreshToken);
     }
 
     if (user.refreshTokens.length >= ALLOWED_NO_OF_DEVICES) {
@@ -66,7 +66,8 @@ export const loginUser = async (req, res, next) => {
     const refreshToken = await user.generateRefreshToken();
 
     setCookies(res, refreshToken);
-    return res.status(200).json({ accessToken });
+
+    return res.status(200).json({ accessToken, user });
   } catch (error) {
     console.error(
       `Error: File: AuthController, func: loginUser, line: 38`,
@@ -148,7 +149,7 @@ export const refreshAccessToken = async (req, res, next) => {
       const newRefreshToken = await user.generateRefreshToken();
       setCookies(res, newRefreshToken);
 
-      return res.status(200).json({ accessToken, roles });
+      return res.status(200).json({ accessToken });
     }
   );
 };

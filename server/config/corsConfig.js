@@ -1,4 +1,4 @@
-const ALLOWED_ORIGINS = ['http://localhost:3000'];
+import {ALLOWED_ORIGINS} from "../utils/constants.js";
 
 const corsConfig = {
   origin: (origin, callback) => {

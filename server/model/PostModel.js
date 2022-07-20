@@ -5,7 +5,7 @@ const postSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: 'user',
+      ref: 'User',
     },
     description: {
       type: String,
@@ -14,7 +14,7 @@ const postSchema = new mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         default: [],
-        ref: 'user',
+        ref: 'User',
       },
     ],
     image: {

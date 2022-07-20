@@ -96,7 +96,6 @@ UserSchema.methods.toJSON = function () {
 
   delete userObj.password;
   delete userObj.refreshTokens;
-  delete userObj.roles;
   delete userObj.createdAt;
   delete userObj.updatedAt;
   delete userObj.__v;
