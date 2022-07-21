@@ -5,6 +5,7 @@ import {
   LOGOUT_START,
   LOGOUT_FAILED,
   LOGOUT_SUCCESS,
+  NEW_ACCESS_TOKEN
 } from './AuthActionTypes';
 
 import {
@@ -67,6 +68,19 @@ const authReducer = (state = initialState, action) => {
         loadingUserProfile: false,
         message: null,
       };
+
+    case NEW_ACCESS_TOKEN: 
+      return {
+        ...state,
+        loadingAuth: false,
+        error: null,
+        loadingUserProfile: false,
+        message: null,
+        authData: {
+          ...state.authData,
+          accessToken: action.data
+        }
+      }
 
     case LOGOUT_SUCCESS:
       // localStorage.clear();
