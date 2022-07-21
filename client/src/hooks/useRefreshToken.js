@@ -15,7 +15,7 @@ const useRefreshToken = () => {
       
     } catch (error) {
       dispatch({type: AUTH_FAILED, error})
-      console.error(error)
+      return Promise.reject(error);
     }
   };
 

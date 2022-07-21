@@ -1,14 +1,19 @@
-import {useEffect} from 'react'
-import { useSelector } from 'react-redux';
-import {Outlet} from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import { useSelector, useDispatch } from 'react-redux';
+import {Outlet, Navigate, useLocation} from 'react-router-dom'
 
 import useRefreshToken from '../../hooks/useRefreshToken';
 import { AxiosAuthInstance } from '../../axios/interceptors';
+import { LOGOUT_SUCCESS } from '../../state/Auth/AuthActionTypes';
 
 const AxiosAuthIntercept = () => {
 
+  const [redirect, setRedirect] = useState(false)
+  const location = useLocation();
+  const dispatch = useDispatch()
+
     const refresh = useRefreshToken();
-  const { accessToken } = useSelector(
+    const { accessToken } = useSelector(
     (state) => state?.authReducer?.authData || ''
   );
 
@@ -33,6 +38,10 @@ const AxiosAuthIntercept = () => {
           prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return AxiosAuthInstance(prevReq);
         }
+        if(error?.response?.status === 401) {
+          dispatch({type: LOGOUT_SUCCESS, error: 'Authenticated Failed. Please try again'})
+          setRedirect(true);
+        }
         return Promise.reject(error);
       }
     );
@@ -40,11 +49,12 @@ const AxiosAuthIntercept = () => {
     return () => {
       AxiosAuthInstance.interceptors.request.eject(request);
       AxiosAuthInstance.interceptors.response.eject(response);
+      setRedirect(false);
     };
-  }, [accessToken, refresh]);
+  }, [accessToken, refresh, dispatch]);
 
 
-  return <Outlet />
+  return redirect ? <Navigate to="/" state={{from: location}} replace /> : <Outlet />
 }
 
 export default AxiosAuthIntercept
