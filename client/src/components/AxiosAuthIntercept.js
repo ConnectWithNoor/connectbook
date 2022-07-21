@@ -2,9 +2,9 @@ import {useEffect, useState} from 'react'
 import { useSelector, useDispatch } from 'react-redux';
 import {Outlet, Navigate, useLocation} from 'react-router-dom'
 
-import useRefreshToken from '../../hooks/useRefreshToken';
-import { AxiosAuthInstance } from '../../axios/interceptors';
-import { LOGOUT_SUCCESS } from '../../state/Auth/AuthActionTypes';
+import useRefreshToken from '../hooks/useRefreshToken';
+import { AxiosAuthInstance } from '../axios/interceptors';
+import { LOGOUT_SUCCESS } from '../state/Auth/AuthActionTypes';
 
 const AxiosAuthIntercept = () => {
 

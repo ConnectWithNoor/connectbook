@@ -151,7 +151,7 @@ export const refreshAccessToken = async (req, res, next) => {
       const newRefreshToken = await user.generateRefreshToken();
       setCookies(res, newRefreshToken);
 
-      return res.status(200).json({ accessToken });
+      return res.status(200).json({ accessToken, user });
     }
   );
 };

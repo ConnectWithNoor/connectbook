@@ -59,6 +59,7 @@ const authReducer = (state = initialState, action) => {
       };
 
     case AUTH_SUCCESS:
+    case NEW_ACCESS_TOKEN: 
       // localStorage.setItem('profile', JSON.stringify(action.data));
       return {
         ...state,
@@ -68,19 +69,6 @@ const authReducer = (state = initialState, action) => {
         loadingUserProfile: false,
         message: null,
       };
-
-    case NEW_ACCESS_TOKEN: 
-      return {
-        ...state,
-        loadingAuth: false,
-        error: null,
-        loadingUserProfile: false,
-        message: null,
-        authData: {
-          ...state.authData,
-          accessToken: action.data
-        }
-      }
 
     case LOGOUT_SUCCESS:
       // localStorage.clear();

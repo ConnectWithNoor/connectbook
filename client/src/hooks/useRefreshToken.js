@@ -10,7 +10,9 @@ const useRefreshToken = () => {
       dispatch({type: AUTH_START })
     try {
       const { data } = await generateRefreshTokenApi();
-      dispatch({type: NEW_ACCESS_TOKEN, data: data.accessToken})
+
+      dispatch({type: NEW_ACCESS_TOKEN, data})
+      
       return data.accessToken;
       
     } catch (error) {
