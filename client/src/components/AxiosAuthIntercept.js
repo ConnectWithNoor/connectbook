@@ -17,7 +17,6 @@ const AxiosAuthIntercept = () => {
   );
 
   useEffect(() => {
-    console.log('123');
     const request = AxiosAuthInstance.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {

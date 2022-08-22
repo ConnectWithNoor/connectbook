@@ -14,30 +14,31 @@ function App() {
     <div className='app'>
       <div className='blur blur-1'></div>
       <div className='blur blur-2'></div>
+      <AxiosAuthIntercept />
       <Routes>
-        <Route element={<AxiosAuthIntercept />}>
-          <Route element={<PersistAuth />}>
-            {ROUTES_LIST.map((route) => {
-              return (
-                <Route
-                  path={route.path}
-                  key={route.key}
-                  element={
-                    route.isProtected ? (
-                      <ProtectedRoute>
-                        <route.element />
-                      </ProtectedRoute>
-                    ) : (
-                      <UnprotectedRoute>
-                        <route.element />
-                      </UnprotectedRoute>
-                    )
-                  }
-                />
-              );
-            })}
-          </Route>
+        {/* <Route element={<AxiosAuthIntercept />}> */}
+        <Route element={<PersistAuth />}>
+          {ROUTES_LIST.map((route) => {
+            return (
+              <Route
+                path={route.path}
+                key={route.key}
+                element={
+                  route.isProtected ? (
+                    <ProtectedRoute>
+                      <route.element />
+                    </ProtectedRoute>
+                  ) : (
+                    <UnprotectedRoute>
+                      <route.element />
+                    </UnprotectedRoute>
+                  )
+                }
+              />
+            );
+          })}
         </Route>
+        {/* </Route> */}
       </Routes>
     </div>
   );
