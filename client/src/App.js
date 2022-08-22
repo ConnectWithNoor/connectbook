@@ -10,18 +10,17 @@ import PersistAuth from './components/PersistAuth';
 import './App.css';
 
 function App() {
-
   return (
     <div className='app'>
       <div className='blur blur-1'></div>
       <div className='blur blur-2'></div>
       <Routes>
-        <Route element={<AxiosAuthIntercept />} >
-        <Route element={<PersistAuth />} >
+        <Route element={<AxiosAuthIntercept />}>
+          <Route element={<PersistAuth />}>
             {ROUTES_LIST.map((route) => {
               return (
                 <Route
-                path={route.path}
+                  path={route.path}
                   key={route.key}
                   element={
                     route.isProtected ? (
