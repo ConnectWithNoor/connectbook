@@ -1,4 +1,4 @@
-export const BASE_URL = 'http://localhost:5000/api';
+export const BASE_URL = 'https://connectbook-backend.herokuapp.com/api';
 
 export const AUTH_REGISTER = '/auth/register'; //done
 export const AUTH_LOGIN = '/auth/login'; //done
