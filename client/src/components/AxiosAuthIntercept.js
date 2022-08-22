@@ -1,23 +1,23 @@
-import {useEffect, useState} from 'react'
+import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import {Outlet, Navigate, useLocation} from 'react-router-dom'
+import { Outlet, Navigate, useLocation } from 'react-router-dom';
 
 import useRefreshToken from '../hooks/useRefreshToken';
 import { AxiosAuthInstance } from '../axios/interceptors';
 import { LOGOUT_SUCCESS } from '../state/Auth/AuthActionTypes';
 
 const AxiosAuthIntercept = () => {
-
-  const [redirect, setRedirect] = useState(false)
+  const [redirect, setRedirect] = useState(false);
   const location = useLocation();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-    const refresh = useRefreshToken();
-    const { accessToken } = useSelector(
+  const refresh = useRefreshToken();
+  const { accessToken } = useSelector(
     (state) => state?.authReducer?.authData || ''
   );
 
-    useEffect(() => {
+  useEffect(() => {
+    console.log('123');
     const request = AxiosAuthInstance.interceptors.request.use(
       (config) => {
         if (!config.headers['Authorization']) {
@@ -34,12 +34,15 @@ const AxiosAuthIntercept = () => {
         const prevReq = error?.config;
         if (error?.response?.status === 403 && !prevReq.sent) {
           prevReq.sent = true;
-          const newAccessToken  = await refresh();
+          const newAccessToken = await refresh();
           prevReq.headers['Authorization'] = `Bearer ${newAccessToken}`;
           return AxiosAuthInstance(prevReq);
         }
-        if(error?.response?.status === 401) {
-          dispatch({type: LOGOUT_SUCCESS, error: 'Authenticated Failed. Please try again'})
+        if (error?.response?.status === 401) {
+          dispatch({
+            type: LOGOUT_SUCCESS,
+            error: 'Authenticated Failed. Please try again',
+          });
           setRedirect(true);
         }
         return Promise.reject(error);
@@ -53,8 +56,11 @@ const AxiosAuthIntercept = () => {
     };
   }, [accessToken, refresh, dispatch]);
 
+  return redirect ? (
+    <Navigate to='/' state={{ from: location }} replace />
+  ) : (
+    <Outlet />
+  );
+};
 
-  return redirect ? <Navigate to="/" state={{from: location}} replace /> : <Outlet />
-}
-
-export default AxiosAuthIntercept
+export default AxiosAuthIntercept;
