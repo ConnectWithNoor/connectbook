@@ -1,4 +1,4 @@
-import { TrendData } from '../../../data/TrendsData.js';
+import { TrendData } from '../../../data/TrendsData';
 
 import './TrendCard.css';
 
